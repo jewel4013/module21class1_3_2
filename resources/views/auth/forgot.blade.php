@@ -30,7 +30,7 @@
             <div class="text-center mb-4">
                 <span class="fs-1">🛒</span>
                 <h3 class="fw-bold text-success mt-2 mb-1">SHWAPNO POS</h3>
-                <p class="text-white-50 small">Log in your store keeper & outlet account</p>
+                <p class="text-white-50 small">Forgot your password? </p>
             </div>
 
             <!-- ২ কলামের রেসপনসিভ ইনপুট গ্রিড -->
@@ -41,25 +41,18 @@
                     <input type="email" id="email" class="form-control bg-dark border-secondary text-white rounded-3 py-2" placeholder="name@shwapno.com">
                     <div id="error-email" class="invalid-feedback"></div>
                 </div>    
-
-                <!-- পাসওয়ার্ড -->
-                <div class="col-12 col-md-12">
-                    <label class="form-label text-white-50 small fw-bold">Password *</label>
-                    <input type="password" id="password" class="form-control bg-dark border-secondary text-white rounded-3 py-2" placeholder="••••••••">
-                    <div id="error-password" class="invalid-feedback"></div>
-                </div>
             </div>
 
             <!-- সাবমিট বোতাম (onClick ইভেন্ট চালিত) -->
             <div class="mt-4">
-                <button type="button" onclick="handleRegister()" class="btn btn-success w-100 rounded-3 py-2.5 fw-bold text-uppercase tracking-wide shadow-sm" id="register">
-                    Register Account 🔐
+                <button type="button" onclick="handleForgotRegister()" class="btn btn-success w-100 rounded-3 py-2.5 fw-bold text-uppercase tracking-wide shadow-sm" id="register">
+                    Send Reset OTP 🔐
                 </button>
             </div>
 
             <p class="text-center text-white-50 small mt-3 mb-0">
-                <span>Already have an account? </span> <a href="/register" class="text-success text-decoration-none fw-semibold">Sign UP</a> ||
-                <span>Forget your password? </span> <a href="/forgot" class="text-success text-decoration-none fw-semibold">Forgot Password</a>
+                <span>Already have an account? </span> <a href="/login" class="text-success text-decoration-none fw-semibold">Sign In</a> ||
+                <span>Login with password</span> <a href="/login" class="text-success text-decoration-none fw-semibold">Login</a>
             </p>
 
         </div>
@@ -72,25 +65,21 @@
     <script src="https://cdn.jsdelivr.net/npm/axios@1.18.1/dist/axios.min.js"></script>
 
     <script>
-        async function handleRegister() {
+        async function handleForgotRegister() {
             // ১. আইডি (ID) ধরে ইনপুট ডাটা রিড করা
             let email = document.getElementById('email').value.trim();
-            let password = document.getElementById('password').value;
-
-           if(email.length == 0){
+            if(email.length === 0){
                 toastr.error("Email fild is required!");         
-            }else{
-                let formData = new FormData();                
-                formData.append('email', email);                
-                formData.append('password', password);                
+            }else{                    
                 try {
-                    let response = await axios.post('/backend/login');
+                    let response = await axios.post('/backend/forgot', {email: email});
 
                     console.log(response);
                     if(response.status === 201 && response.data.success === true){
                         toastr.success(response.data.message);
+                        sessionStorage.setItem('email', email);
                         setTimeout(function() {
-                            window.location.href = '/login';
+                            window.location.href = '/verifyotp';
                         }, 1000);
                     }else if(response.response.status === 422){
                         let errors = response.response.data.errors;

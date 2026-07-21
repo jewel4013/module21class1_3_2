@@ -30,36 +30,29 @@
             <div class="text-center mb-4">
                 <span class="fs-1">🛒</span>
                 <h3 class="fw-bold text-success mt-2 mb-1">SHWAPNO POS</h3>
-                <p class="text-white-50 small">Log in your store keeper & outlet account</p>
+                <p class="text-white-50 small">Verify Your OTP</p>
             </div>
 
             <!-- ২ কলামের রেসপনসিভ ইনপুট গ্রিড -->
             <div class="row g-3">
                 <!-- ইমেইল -->
                 <div class="col-12 col-md-12">
-                    <label class="form-label text-white-50 small fw-bold">Email Address *</label>
-                    <input type="email" id="email" class="form-control bg-dark border-secondary text-white rounded-3 py-2" placeholder="name@shwapno.com">
-                    <div id="error-email" class="invalid-feedback"></div>
+                    <label class="form-label text-white-50 small fw-bold">Otp</label>
+                    <input type="text" id="otp" class="form-control bg-dark border-secondary text-white rounded-3 py-2" placeholder="O.T.P">
+                    <div id="error-otp" class="invalid-feedback"></div>
                 </div>    
-
-                <!-- পাসওয়ার্ড -->
-                <div class="col-12 col-md-12">
-                    <label class="form-label text-white-50 small fw-bold">Password *</label>
-                    <input type="password" id="password" class="form-control bg-dark border-secondary text-white rounded-3 py-2" placeholder="••••••••">
-                    <div id="error-password" class="invalid-feedback"></div>
-                </div>
             </div>
 
             <!-- সাবমিট বোতাম (onClick ইভেন্ট চালিত) -->
             <div class="mt-4">
-                <button type="button" onclick="handleRegister()" class="btn btn-success w-100 rounded-3 py-2.5 fw-bold text-uppercase tracking-wide shadow-sm" id="register">
-                    Register Account 🔐
+                <button type="button" onclick="handleForgotCheckRegister()" class="btn btn-success w-100 rounded-3 py-2.5 fw-bold text-uppercase tracking-wide shadow-sm" id="register">
+                    Verify your OTP 🔐
                 </button>
             </div>
 
             <p class="text-center text-white-50 small mt-3 mb-0">
-                <span>Already have an account? </span> <a href="/register" class="text-success text-decoration-none fw-semibold">Sign UP</a> ||
-                <span>Forget your password? </span> <a href="/forgot" class="text-success text-decoration-none fw-semibold">Forgot Password</a>
+                <span>Already have an account? </span> <a href="/login" class="text-success text-decoration-none fw-semibold">Sign In</a> ||
+                <span>Login with password</span> <a href="/login" class="text-success text-decoration-none fw-semibold">Login</a>
             </p>
 
         </div>
@@ -72,25 +65,24 @@
     <script src="https://cdn.jsdelivr.net/npm/axios@1.18.1/dist/axios.min.js"></script>
 
     <script>
-        async function handleRegister() {
+        async function handleForgotCheckRegister() {
             // ১. আইডি (ID) ধরে ইনপুট ডাটা রিড করা
-            let email = document.getElementById('email').value.trim();
-            let password = document.getElementById('password').value;
-
-           if(email.length == 0){
-                toastr.error("Email fild is required!");         
-            }else{
-                let formData = new FormData();                
-                formData.append('email', email);                
-                formData.append('password', password);                
+            let otp = document.getElementById('otp').value.trim();
+            if(otp.length === 0){
+                toastr.error("Otp fild is required!");         
+            }else{                    
                 try {
-                    let response = await axios.post('/backend/login');
+                    let response = await axios.post('/backend/verifyotp', {
+                        otp: otp,
+                        email: sessionStorage.getItem('email')
+                    });
 
                     console.log(response);
                     if(response.status === 201 && response.data.success === true){
                         toastr.success(response.data.message);
+                        sessionStorage.clear();
                         setTimeout(function() {
-                            window.location.href = '/login';
+                            window.location.href = '/passwordreset';
                         }, 1000);
                     }else if(response.response.status === 422){
                         let errors = response.response.data.errors;

@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shwapno POS - Register</title>
     
-    <!-- 🚀 অফিশিয়াল বুটস্ট্র্যাপ ৫.৩.৩ এবং টোস্টার সিএসএস সিডিএন (১০০% ওয়ার্কিং) -->
-    <!-- Latest compiled and minified CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 🚀 আপনার নিজস্ব ও ওয়ার্কিং বুটস্ট্র্যাপ এবং টোস্টার সিএসএস সিডিএন লিংকসমূহ -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet"/>
     
     
     <style>
@@ -35,45 +35,58 @@
 
             <!-- ২ কলামের রেসপনসিভ ইনপুট গ্রিড -->
             <div class="row g-3">
+                <!-- নাম -->
                 <div class="col-12 col-md-6">
                     <label class="form-label text-white-50 small fw-bold">Full Name *</label>
                     <input type="text" id="name" class="form-control bg-dark border-secondary text-white rounded-3 py-2" placeholder="John Doe">
+                    <div id="error-name" class="invalid-feedback"></div>
                 </div>
 
+                <!-- ইমেইল -->
                 <div class="col-12 col-md-6">
                     <label class="form-label text-white-50 small fw-bold">Email Address *</label>
                     <input type="email" id="email" class="form-control bg-dark border-secondary text-white rounded-3 py-2" placeholder="name@shwapno.com">
+                    <div id="error-email" class="invalid-feedback"></div>
                 </div>
 
+                <!-- আউটলেট ড্রপডাউন (Select Option) -->
                 <div class="col-12 col-md-6">
-                    <label class="form-label text-white-50 small fw-bold">Outlet Location *</label>
-                    <input type="text" id="outlate" class="form-control bg-dark border-secondary text-white rounded-3 py-2" placeholder="Mirpur-10 Outlet">
+                    <label class="form-label text-white-50 small fw-bold">Select Outlet *</label>
+                    <select id="outlet" class="form-select bg-dark border-secondary text-white rounded-3 py-2">
+                        <option value="">-- Choose Outlet --</option>
+                        <option value="Uttara">Uttara</option>
+                        <option value="Banani">Banani</option>
+                        <option value="Gulshan">Gulshan</option>
+                        <option value="Mirpur">Mirpur</option>
+                    </select>
+                    <div id="error-outlet" class="invalid-feedback"></div>
                 </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="form-label text-white-50 small fw-bold">Phone Number</label>
-                    <input type="text" id="phone" class="form-control bg-dark border-secondary text-white rounded-3 py-2" placeholder="017XXXXXXXX">
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="form-label text-white-50 small fw-bold">Password *</label>
-                    <input type="password" id="password" class="form-control bg-dark border-secondary text-white rounded-3 py-2" placeholder="••••••••">
-                </div>
-
+                <!-- প্রোফাইল ছবি (Avatar) -->
                 <div class="col-12 col-md-6">
                     <label class="form-label text-white-50 small fw-bold">Profile Photo (Avatar)</label>
                     <input type="file" id="avatar" class="form-control bg-dark border-secondary text-white rounded-3 py-2">
+                    <div id="error-avatar" class="invalid-feedback"></div>
                 </div>
 
-                <div class="col-12">
-                    <label class="form-label text-white-50 small fw-bold">Full Address</label>
-                    <textarea id="address" rows="2" class="form-control bg-dark border-secondary text-white rounded-3 py-2" placeholder="Outlet or Permanent Address..."></textarea>
+                <!-- পাসওয়ার্ড -->
+                <div class="col-12 col-md-6">
+                    <label class="form-label text-white-50 small fw-bold">Password *</label>
+                    <input type="password" id="password" class="form-control bg-dark border-secondary text-white rounded-3 py-2" placeholder="••••••••">
+                    <div id="error-password" class="invalid-feedback"></div>
+                </div>
+
+                <!-- কনফার্মেশন পাসওয়ার্ড -->
+                <div class="col-12 col-md-6">
+                    <label class="form-label text-white-50 small fw-bold">Confirm Password *</label>
+                    <input type="password" id="password_confirmation" class="form-control bg-dark border-secondary text-white rounded-3 py-2" placeholder="••••••••">
+                    <div id="error-password_confirmation" class="invalid-feedback"></div>
                 </div>
             </div>
 
             <!-- সাবমিট বোতাম (onClick ইভেন্ট চালিত) -->
             <div class="mt-4">
-                <button type="button" onclick="handleRegister()" class="btn btn-success w-100 rounded-3 py-2.5 fw-bold text-uppercase tracking-wide shadow-sm">
+                <button type="button" onclick="handleRegister()" class="btn btn-success w-100 rounded-3 py-2.5 fw-bold text-uppercase tracking-wide shadow-sm" id="register">
                     Register Account 🔐
                 </button>
             </div>
@@ -84,72 +97,85 @@
 
         </div>
     </div>
-    <!-- 🚀 অফিশিয়াল জেকোয়েরি, টোস্টার, বুটস্ট্র্যাপ বান্ডেল এবং অ্যাক্সিওস সিডিএন স্ক্রিপ্টস -->
-    <!-- Latest compiled JavaScript -->
+    <!-- 🚀 আপনার নিজস্ব ও শতভাগ ওয়ার্কিং জেএস, টোস্টার এবং অ্যাক্সিওস সিডিএন লিংকসমূহ -->
+    <script src="{{asset('build/assets/js/config.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js" integrity="sha512-yNbKY1y6hXLM4yLu5SLn2+l+Qaz2tO+7Z+j+0ELFl9p1z9+06fTma6j8T7RwOXf/uSJUT82/hwkIROY/3aNvzUg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.18.1/axios.min.js" integrity="sha512-l1tCs7ua0mpVzhqYBRTbxh05c4bT7cu1Ma5vSpcwT9yP75wEkbGhwIe1kxmowZRVXxwjTMCbogc3A7y4SUfT7w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-        toastr.options = { "closeButton": true, "progressBar": true, "positionClass": "toast-top-right", "timeOut": "3000" };
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.18.1/dist/axios.min.js"></script>
 
-        function handleRegister() {
+    <script>
+        async function handleRegister() {
+            // ১. আইডি (ID) ধরে ইনপুট ডাটা রিড করা
             let name = document.getElementById('name').value.trim();
             let email = document.getElementById('email').value.trim();
-            let outlate = document.getElementById('outlate').value.trim();
-            let phone = document.getElementById('phone').value.trim();
+            let outlet = document.getElementById('outlet').value;
             let password = document.getElementById('password').value;
-            let address = document.getElementById('address').value.trim();
-            let avatarInput = document.getElementById('avatar'); 
-            let avatarFile = avatarInput.files[0]; // 🎯 ফিক্স: প্রথম ফাইল অবজেক্টটি নিখুঁতভাবে ধরা হলো
+            let password_confirmation = document.getElementById('password_confirmation').value;
+            let avatar = document.getElementById('avatar').files[0];
+            let avatarFile = avatar; // প্রথম ফাইল অবজেক্টটি নেওয়া হলো
 
-            // ফ্রন্টএন্ড কুইক ভ্যালিডেশন
-            if (!name || !email || !outlate || !password) {
-                toastr.error("Please fill up all required (*) fields!");
-                return;
-            }
-            if (password.length < 6) {
+            if(name.length == 0){
+                toastr.error("Name field is required!");
+            }else if(email.length == 0){
+                toastr.error("Email fild is required!");         
+            }else if(password.length < 6){
                 toastr.error("Password must be at least 6 characters long!");
-                return;
+            }else if(password !== password_confirmation){
+                toastr.error("Password and Confirm Password do not match!");
+            }else{
+                let formData = new FormData();
+                formData.append('name', name);
+                formData.append('email', email);
+                formData.append('outlet', outlet);
+                formData.append('password', password);
+                formData.append('password_confirmation', password_confirmation);
+                if(avatarFile) {
+                    formData.append('avatar', avatarFile);
+                }
+                try {
+                    let response = await axios.post('/backend/register', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
+                    console.log(response);
+                    if(response.status === 201 && response.data.success === true){
+                        toastr.success(response.data.message);
+                        setTimeout(function() {
+                            window.location.href = '/login';
+                        }, 1000);
+                    }else if(response.response.status === 422){
+                        let errors = response.response.data.errors;
+                        for (let field in errors) {
+                            if(errors.hasOwnProperty(field)){
+                                toastr.error(errors[field][0]);
+                            }
+                        }
+                    }else{
+                        console.log(response.data);
+                        toastr.error("Some error.");
+                    }
+                } catch (err) {
+                    if(err.response){
+                        let errors = err.response.data.errors;
+                        if(Array.isArray(errors)){  
+                            errors.forEach(msg => toastr.error(msg));
+                        }else{
+                            for (let field in errors) {
+                                if(errors.hasOwnProperty(field)){
+                                    toastr.error(errors[field][0]);
+                                }
+                            }
+                        }                        
+                    }else{
+                        toastr.error("Something went wrong. Please try again.");
+                    }
+                }
             }
-
-            // ইমেজ সহ ডাটা ট্রান্সফারের জন্য FormData তৈরি
-            let formData = new FormData();
-            formData.append('name', name);
-            formData.append('email', email);
-            formData.append('outlate', outlate);
-            formData.append('phone', phone);
-            formData.append('password', password);
-            formData.append('address', address);
             
-            if (avatarFile) {
-                formData.append('avatar', avatarFile);
-            }
-
-            toastr.info("Processing your registration...");
             
-            // Axios পোস্ট রিকোয়েস্ট
-            axios.post('/api/register', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-            .then(function (response) {
-                if (response.data.success === true) {
-                    toastr.success(response.data.message);
-                    setTimeout(function() {
-                        window.location.href = '/login';
-                    }, 2000);
-                }
-            })
-            .catch(function (error) {
-                if (error.response && error.response.data) {
-                    toastr.error(error.response.data.message);
-                } else {
-                    toastr.error("Something went wrong. Please try again.");
-                }
-            });
-        }
+        }  
     </script>
 </body>
 </html>

@@ -34,19 +34,19 @@
             </div>
 
             <!-- ২ কলামের রেসপনসিভ ইনপুট গ্রিড -->
-            <div class="row g-3">
-                <!-- ইমেইল -->
-                <div class="col-12 col-md-12">
-                    <label class="form-label text-white-50 small fw-bold">Email Address *</label>
-                    <input type="email" id="email" class="form-control bg-dark border-secondary text-white rounded-3 py-2" placeholder="name@shwapno.com">
-                    <div id="error-email" class="invalid-feedback"></div>
-                </div>    
-
+            <div class="row g-3">                <!
                 <!-- পাসওয়ার্ড -->
-                <div class="col-12 col-md-12">
+                <div class="col-12 col-md-6">
                     <label class="form-label text-white-50 small fw-bold">Password *</label>
                     <input type="password" id="password" class="form-control bg-dark border-secondary text-white rounded-3 py-2" placeholder="••••••••">
                     <div id="error-password" class="invalid-feedback"></div>
+                </div>
+
+                <!-- কনফার্মেশন পাসওয়ার্ড -->
+                <div class="col-12 col-md-6">
+                    <label class="form-label text-white-50 small fw-bold">Confirm Password *</label>
+                    <input type="password" id="password_confirmation" class="form-control bg-dark border-secondary text-white rounded-3 py-2" placeholder="••••••••">
+                    <div id="error-password_confirmation" class="invalid-feedback"></div>
                 </div>
             </div>
 
