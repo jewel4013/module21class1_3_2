@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helper\JwtToken;
+use App\Http\Requests\ForgotPasswordOtpCheckSendRequest;
 use App\Http\Requests\ForgotPasswordOtpSendRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegistrerRequest;
@@ -100,7 +101,7 @@ class AuthController extends Controller
     {
         return view('auth.verifyotp');
     }
-    public function verifyOTPCheck(Request $request)
+    public function verifyOTPCheck(ForgotPasswordOtpCheckSendRequest $request)
     {
         try {
             Otp::where('email', $request->email)
@@ -111,14 +112,14 @@ class AuthController extends Controller
             /** @var array $token */
             $token = JwtToken::createToken(['email' => $request->email], $exp);
             return response()->json([
-                'success' => true,
+                'status' => true,
                 'message' => 'OTP verified successfully',
             ], 200)->cookie('resetPasswordToken', $token['token'], $exp);
         
         }catch(\Exception $e){
             Log::critical($e->getMessage().' '.$e->getFile().' '.$e->getLine());
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'Something went wrong, please try again later and later',
             ], 500);
         }

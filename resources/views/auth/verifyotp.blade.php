@@ -58,7 +58,7 @@
         </div>
     </div>
     <!-- 🚀 আপনার নিজস্ব ও শতভাগ ওয়ার্কিং জেএস, টোস্টার এবং অ্যাক্সিওস সিডিএন লিংকসমূহ -->
-    <script src="{{asset('build/assets/js/config.js')}}"></script>
+    {{-- <script src="{{asset('build/assets/js/config.js')}}"></script> --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js" ></script>
@@ -66,9 +66,9 @@
 
     <script>
         async function handleForgotCheckRegister() {
-            // ১. আইডি (ID) ধরে ইনপুট ডাটা রিড করা
             let otp = document.getElementById('otp').value.trim();
-            if(otp.length === 0){
+
+            if(otp.length !== 6){
                 toastr.error("Otp fild is required!");         
             }else{                    
                 try {
@@ -78,13 +78,14 @@
                     });
 
                     console.log(response);
-                    if(response.status === 201 && response.data.success === true){
+
+                    if(response.status === 200 && response.data.status === true){
                         toastr.success(response.data.message);
                         sessionStorage.clear();
                         setTimeout(function() {
                             window.location.href = '/passwordreset';
-                        }, 1000);
-                    }else if(response.response.status === 422){
+                        }, 4000);
+                    }else if(response.response.success === 422){
                         let errors = response.response.data.errors;
                         for (let field in errors) {
                             if(errors.hasOwnProperty(field)){
@@ -93,7 +94,7 @@
                         }
                     }else{
                         console.log(response.data);
-                        toastr.error("Some error.");
+                        toastr.error(response.data.message);
                     }
                 } catch (err) {
                     if(err.response){

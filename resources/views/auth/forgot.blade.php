@@ -58,7 +58,6 @@
         </div>
     </div>
     <!-- 🚀 আপনার নিজস্ব ও শতভাগ ওয়ার্কিং জেএস, টোস্টার এবং অ্যাক্সিওস সিডিএন লিংকসমূহ -->
-    <script src="{{asset('build/assets/js/config.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js" ></script>

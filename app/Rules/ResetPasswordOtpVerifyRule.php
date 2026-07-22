@@ -16,15 +16,16 @@ class ResetPasswordOtpVerifyRule implements ValidationRule
      */
     public function __construct(protected string $email){}
 
+
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $getOtp = Otp::where('email', $this->email)
         ->where('otp', $value)
         ->where('status', false)
-        ->where('created_at', '>=', now()->subMinutes(30))
+        ->where('created_at', '>=', now()->subMinutes(60))
         ->first();
 
-        if($getOtp){
+        if(!$getOtp){
             $fail('The OTP is not valid');
         }
     }

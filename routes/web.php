@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 //bankend routes
 Route::post('/backend/register', [AuthController::class, 'register'])->name('register'); // রেজিস্ট্রেশন পেজ রেন্ডার করা
 Route::post('/backend/forgot', [AuthController::class, 'forgot'])->name('forgot'); // রেজিস্ট্রেশন পেজ রেন্ডার করা
-Route::post('/backend/verifyotp', [AuthController::class, 'verifyOTPCheck'])->name('verifyotp'); // রেজিস্ট্রেশন পেজ রেন্ডার করা
+Route::post('/backend/verifyotp', [AuthController::class, 'verifyOTPCheck'])->name('verifyOTPCheck'); // রেজিস্ট্রেশন পেজ রেন্ডার করা
 
 
 //frontend routes
