@@ -30,14 +30,14 @@
             <div class="text-center mb-4">
                 <span class="fs-1">🛒</span>
                 <h3 class="fw-bold text-success mt-2 mb-1">SHWAPNO POS</h3>
-                <p class="text-white-50 small">Log in your store keeper & outlet account</p>
+                <p class="text-white-50 small">Reset your new passowrd</p>
             </div>
 
             <!-- ২ কলামের রেসপনসিভ ইনপুট গ্রিড -->
             <div class="row g-3">                <!
                 <!-- পাসওয়ার্ড -->
                 <div class="col-12 col-md-6">
-                    <label class="form-label text-white-50 small fw-bold">Password *</label>
+                    <label class="form-label text-white-50 small fw-bold">New Password *</label>
                     <input type="password" id="password" class="form-control bg-dark border-secondary text-white rounded-3 py-2" placeholder="••••••••">
                     <div id="error-password" class="invalid-feedback"></div>
                 </div>
@@ -52,7 +52,7 @@
 
             <!-- সাবমিট বোতাম (onClick ইভেন্ট চালিত) -->
             <div class="mt-4">
-                <button type="button" onclick="handleRegister()" class="btn btn-success w-100 rounded-3 py-2.5 fw-bold text-uppercase tracking-wide shadow-sm" id="register">
+                <button type="button" onclick="handleResetPass()" class="btn btn-success w-100 rounded-3 py-2.5 fw-bold text-uppercase tracking-wide shadow-sm" id="register">
                     Register Account 🔐
                 </button>
             </div>
@@ -72,23 +72,28 @@
     <script src="https://cdn.jsdelivr.net/npm/axios@1.18.1/dist/axios.min.js"></script>
 
     <script>
-        async function handleRegister() {
+        async function handleResetPass() {
             // ১. আইডি (ID) ধরে ইনপুট ডাটা রিড করা
-            let email = document.getElementById('email').value.trim();
             let password = document.getElementById('password').value;
+            let password_confirmation = document.getElementById('password_confirmation').value;
 
-           if(email.length == 0){
+           if(password.length === 0){
                 toastr.error("Email fild is required!");         
-            }else{
-                let formData = new FormData();                
-                formData.append('email', email);                
-                formData.append('password', password);                
+            }else if(password_confirmation.length === 0){
+                toastr.error("Confirm Password fild is required!");
+            }else if(password !== password_confirmation){
+                toastr.error("Password and Confirm Password do not match!");
+            }else{                               
                 try {
-                    let response = await axios.post('/backend/login');
-
+                    let response = await axios.post('/backend/resetpassword', {
+                        password: password,
+                        password_confirmation: password_confirmation,
+                    });
                     console.log(response);
-                    if(response.status === 201 && response.data.success === true){
+
+                    if(response.status === 200 && response.data.status === true){
                         toastr.success(response.data.message);
+                        sessionStorage.clear();
                         setTimeout(function() {
                             window.location.href = '/login';
                         }, 1000);
@@ -100,8 +105,7 @@
                             }
                         }
                     }else{
-                        console.log(response.data);
-                        toastr.error("Some error.");
+                        toastr.error(response.data.message);
                     }
                 } catch (err) {
                     if(err.response){

@@ -13,4 +13,15 @@ class Profile extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+
+
+    public function getAvatarUrlAttribute()
+    {
+        if($this->avatar) {
+            return asset('storage/'.$this->avatar);
+        }
+        return asset('images/defaultAvatar.png');
+        // return $this->avatar ? Storage::url($this->avatar) : null;
+    }
 }

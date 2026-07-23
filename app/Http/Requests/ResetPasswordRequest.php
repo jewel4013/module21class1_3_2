@@ -2,13 +2,12 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\ResetPasswordOtpVerifyRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ForgotPasswordOtpCheckSendRequest extends FormRequest
+class ResetPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,15 +25,10 @@ class ForgotPasswordOtpCheckSendRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|exists:users,email',
-            'otp' => [
-                'required',
-                'digits:6',
-                new ResetPasswordOtpVerifyRule($this->email),
-            ]
+            'password' => 'required|string|min:6|confirmed',
+            
         ];
     }
-
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([

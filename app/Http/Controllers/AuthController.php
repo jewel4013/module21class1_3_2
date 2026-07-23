@@ -7,6 +7,7 @@ use App\Http\Requests\ForgotPasswordOtpCheckSendRequest;
 use App\Http\Requests\ForgotPasswordOtpSendRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegistrerRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Mail\SendOtpMail;
 use App\Models\Otp;
 use App\Models\Profile;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -67,7 +69,35 @@ class AuthController extends Controller
     
     public function loing(LoginRequest $request)
     {
-        return "hi";
+        try {
+            $user = User::whereEmail($request->email)->first();
+            if(!Hash::check($request->password, $user->password)){
+                return response()->json([
+                    'status' => true,
+                    'errors' => ['Invalid Credentials'],
+                ], 401);
+            }
+            $userData =[
+                'email' => $user->email, 
+                'id' => $user->id,
+                'role' => $user->role,
+                'avatar' => $user->profile->avatar_url,
+            ]; 
+            $exp = time() + 3600*24;            
+            $token = JwtToken::createToken($userData, $exp);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Login Success',
+                'user_info' => $userData,
+            ], 200)->cookie('userToken', $token['token'], $exp);
+        } catch (\Exception $e) {
+            Log::critical($e->getMessage().' '.$e->getFile().' '.$e->getLine());
+            return response()->json([
+                'status' => false,
+                'message' => 'Something went wrong, please try again later',
+            ], 500);
+        }
     }   
 
 
@@ -85,6 +115,7 @@ class AuthController extends Controller
             ]);
             // SendOtpMail does not accept constructor arguments, instantiate without params
             Mail::to($request->email)->send(new SendOtpMail($otp));
+            // Artisan::call('queue:work', ['--once' => true]);
             return response()->json([
                 'success' => true,
                 'message' => 'OTP sent to our email successfully',
@@ -130,5 +161,40 @@ class AuthController extends Controller
     public function showPasswordReset()
     {
         return view('auth.showpasswordreset');
+    }
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        try {
+            if(!$request->cookie('resetPasswordToken')){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Something went wrong, please try again later',
+                ], 200);
+            }else{
+                $decoded = JwtToken::verifyToken($request->cookie('resetPasswordToken'));
+                if($decoded['error']){
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Something went wrong, please try again later',
+                    ], 422);
+                }else{
+                    $user = User::where('email', $decoded['payload']->email)->first();
+                    // $user = User::whereEmail($decoded['payload']->email)->first();
+                    $user->password = $request->password;
+                    $user->save();
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Password reset successfully',
+                    ], 200)->withoutCookie('resetPasswordToken');
+                }
+            }
+
+        }catch(\Exception $e){
+            Log::critical($e->getMessage().' '.$e->getFile().' '.$e->getLine());
+            return response()->json([
+                'status' => false,
+                'message' => 'Last Something went wrong, please try again later',
+            ], 422);
+        }
     }
 }

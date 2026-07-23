@@ -52,7 +52,7 @@
 
             <!-- সাবমিট বোতাম (onClick ইভেন্ট চালিত) -->
             <div class="mt-4">
-                <button type="button" onclick="handleRegister()" class="btn btn-success w-100 rounded-3 py-2.5 fw-bold text-uppercase tracking-wide shadow-sm" id="register">
+                <button type="button" onclick="handleLogin()" class="btn btn-success w-100 rounded-3 py-2.5 fw-bold text-uppercase tracking-wide shadow-sm" id="register">
                     Register Account 🔐
                 </button>
             </div>
@@ -72,27 +72,28 @@
     <script src="https://cdn.jsdelivr.net/npm/axios@1.18.1/dist/axios.min.js"></script>
 
     <script>
-        async function handleRegister() {
+        async function handleLogin() {
             // ১. আইডি (ID) ধরে ইনপুট ডাটা রিড করা
             let email = document.getElementById('email').value.trim();
             let password = document.getElementById('password').value;
 
-           if(email.length == 0){
+            if(email.length === 0){
                 toastr.error("Email fild is required!");         
-            }else{
-                let formData = new FormData();                
-                formData.append('email', email);                
-                formData.append('password', password);                
+            }else if(password.length === 0){
+                toastr.error("Password field is required!");
+            }else{                               
                 try {
-                    let response = await axios.post('/backend/login');
-
+                    let response = await axios.post('/backend/login', {
+                        email: email,
+                        password: password
+                    });
                     console.log(response);
-                    if(response.status === 201 && response.data.success === true){
+                    if(response.status === 200 && response.data.status === true){
                         toastr.success(response.data.message);
                         setTimeout(function() {
-                            window.location.href = '/login';
+                            window.location.href = '/';
                         }, 1000);
-                    }else if(response.response.status === 422){
+                    }else if(response.response.status === 401){
                         let errors = response.response.data.errors;
                         for (let field in errors) {
                             if(errors.hasOwnProperty(field)){
