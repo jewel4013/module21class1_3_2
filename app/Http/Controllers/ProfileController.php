@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\Profile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
@@ -12,7 +14,12 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        //
+        return view('auth.profile');
+    }
+
+    public function profile(){
+        $data = Auth::user();
+        return new UserResource($data);
     }
 
     /**

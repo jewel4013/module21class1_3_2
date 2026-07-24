@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
-{
+{   
     // রেজিস্ট্রেশন পেজ রেন্ডার করা
     public function showRegister()
     {
