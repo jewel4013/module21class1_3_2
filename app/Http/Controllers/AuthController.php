@@ -197,4 +197,13 @@ class AuthController extends Controller
             ], 422);
         }
     }
+
+    public function logout(Request $request)
+    {
+        $request->session()->flush();
+        return response()->json([
+            'status' => true,
+            'message' => 'Logout Success',
+        ], 200);        
+    }
 }
