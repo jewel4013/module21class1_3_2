@@ -85,7 +85,7 @@
                     </div>
                     <div class="d-flex align-items-center">
                         <div class="dropdown-toggle border-white m-lg-1" data-bs-toggle="dropdown">
-                            Log in as: <span class="text-dark fw-bold" role="button">Jewel Rana</span>
+                            Log in as: <span id="userName" class="text-dark fw-bold" role="button">Jewel R</span>
                         </div>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ route('profileShow') }}">Profile</a></li>
@@ -94,7 +94,7 @@
                         </ul>
                         <div class="container-fluid">
                             <div class="navbar-brand" href="#">
-                                <img src="{{ asset('assets/profile.jpg') }}" alt="Logo" style="width:40px;" class="rounded-pill">
+                                <img id="userAvatar" src="" alt="Logo" style="width:40px;" class="rounded-pill">
                             </div>
                         </div>
                     </div>
@@ -113,5 +113,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js" ></script>
         <script src="https://cdn.jsdelivr.net/npm/axios@1.18.1/dist/axios.min.js"></script>
         @stack('script')
+        
     </body>
 </html>

@@ -35,7 +35,7 @@
 
     <!-- সাবমিট বোতাম (onClick ইভেন্ট চালিত) -->
     <div class="mt-4">
-        <button type="button" onclick="handleProfile()" class="btn btn-success rounded-3 py-2.5 fw-bold text-uppercase tracking-wide shadow-sm" id="register">
+        <button type="button" onclick="handleProfile()" class="btn btn-success rounded-3 py-2.5 fw-bold text-uppercase tracking-wide shadow-sm">
             Save Changes
         </button>
     </div>
@@ -58,10 +58,14 @@
 
                 if(response.status === 200){
                     let data = response.data.data;
+                    document.getElementById('userAvatar').src = data.avatar;
+                    document.getElementById('userName').innerHTML = data.name;
+
+
+
                     document.getElementById('name').value = data.name;
                     document.getElementById('phone').value = data.phone;
                     document.getElementById('address').value = data.address;
-                    document.getElementById('avatar').src = data.avatar;
                     
                 } else {
                     console.log(response.data);                    

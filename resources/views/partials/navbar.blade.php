@@ -4,7 +4,7 @@
                     <span>🛒</span> SHWAPNO <span class="badge bg-success ms-2 text-white" style="font-size: 11px;">POS</span>
                 </div>
                 <ul class="sidebar-menu">
-                    <li class="sidebar-item active"><a href="/dashboard"><span>📊</span> <span class="ms-2">Dashboard</span></a></li>
+                    <li class="sidebar-item active"><a href="/"><span>📊</span> <span class="ms-2">Dashboard</span></a></li>
                     <li class="sidebar-item"><a href="/sales"><span>💰</span> <span class="ms-2">Sales Register</span></a></li>
                     <li class="sidebar-item"><a href="/stock"><span>📦</span> <span class="ms-2">Stock Inventory</span></a></li>
                     <li class="sidebar-item"><a href="/invoices"><span>🛍️</span> <span class="ms-2">Products</span></a></li>
@@ -25,7 +25,7 @@
                 </div>
                 <div class="offcanvas-body p-0">
                     <ul class="sidebar-menu">
-                        <li class="sidebar-item active"><a href="/dashboard"><span>📊</span> <span class="ms-2">Dashboard</span></a></li>
+                        <li class="sidebar-item active"><a href="/"><span>📊</span> <span class="ms-2">Dashboard</span></a></li>
                         <li class="sidebar-item"><a href="/invoices"><span>👥</span> <span class="ms-2">Customers</span></a></li>
                         <li class="sidebar-item"><a href="/sales"><span>💰</span> <span class="ms-2">Sales Register</span></a></li>
                         <li class="sidebar-item"><a href="/stock"><span>📦</span> <span class="ms-2">Stock Inventory</span></a></li>
