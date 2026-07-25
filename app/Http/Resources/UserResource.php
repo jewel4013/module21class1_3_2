@@ -20,9 +20,9 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'role' => $this->role,
             'outlet' => $this->outlet,
-            'avatar' => $this->profile->avatar_url,
-            'phone' => $this->profile->phone,
-            'address' => $this->profile->address,
+            'avatar' => $this->profile->avatar_url ?? null,
+            'phone' => $this->profile->phone ?? null,
+            'address' => $this->profile->address ?? null,            
             'status' => $this->email ? 'Active' : 'Inactive',
         ];
     }

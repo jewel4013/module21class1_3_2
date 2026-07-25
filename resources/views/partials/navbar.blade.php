@@ -13,7 +13,7 @@
                     <li class="sidebar-item"><a href="/invoices"><span>📈</span> <span class="ms-2">Statstic</span></a></li>
                 </ul>
                 <div class="position-absolute bottom-0 w-100 p-3 border-top border-secondary border-opacity-25">
-                    <a href="/logout" class="btn btn-outline-danger w-100 btn-sm rounded-3 fw-bold">🚪 Logout</a>
+                    <button onclick="logout()" class="btn btn-outline-danger w-100 btn-sm rounded-3 fw-bold">🚪 Logout</button>
                 </div>
             </nav>
 
@@ -36,6 +36,22 @@
                     </ul>
                 </div>
                 <div class="position-absolute bottom-0 w-100 p-3 border-top border-secondary border-opacity-25">
-                    <a href="/logout" class="btn btn-outline-danger w-100 btn-sm rounded-3 fw-bold">🚪 Logout</a>
+                    <button onclick="logout()" class="btn btn-outline-danger w-100 btn-sm rounded-3 fw-bold">🚪 Logout</button>
                 </div>
             </div>
+
+
+
+    <script>
+        async function logout() {
+            let response = await axios.post('/backend/logout');
+            if(response.status === 200){
+                toastr.success(response.data.message);
+                setTimeout(() => {
+                    window.location.href = '/login';                    
+                }, 2000);
+            }else{
+                toastr.error("Something went wrong.");
+            }                      
+        }
+    </script>

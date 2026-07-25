@@ -70,7 +70,7 @@ class AuthController extends Controller
     public function loing(LoginRequest $request)
     {
         try {
-            $user = User::whereEmail($request->email)->first();
+            $user = User::whereEmail($request->email)->first();            
             if(!Hash::check($request->password, $user->password)){
                 return response()->json([
                     'status' => true,
@@ -89,7 +89,7 @@ class AuthController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Login Success',
-                'user_info' => $userData,
+                'data' => $userData,
             ], 200)->cookie('userToken', $token['token'], $exp);
         } catch (\Exception $e) {
             Log::critical($e->getMessage().' '.$e->getFile().' '.$e->getLine());
@@ -200,10 +200,9 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->session()->flush();
         return response()->json([
             'status' => true,
             'message' => 'Logout Success',
-        ], 200);        
+        ], 200)->withoutCookie('userToken');
     }
 }
