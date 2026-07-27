@@ -110,6 +110,7 @@
                     });
                     console.log(response);
                     if(response.status === 200 && response.data.status === true){
+                        localStorage.setItem('user', JSON.stringify(response.data.data));
                         toastr.success(response.data.message);
                         setTimeout(function() {
                             window.location.href = '/profile';

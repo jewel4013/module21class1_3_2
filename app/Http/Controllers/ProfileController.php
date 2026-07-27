@@ -84,10 +84,12 @@ class ProfileController extends Controller
 
             $user->update($userData);
             $user->profile->update($profileData);
-                       
+            
+            
             return response()->json([
                 'status' => true,
                 'message' => 'Profile updated successfully',
+                'data' => new UserResource($user),
             ], 200);
         }catch(\Exception $e){
             Log::critical($e->getMessage() . ' ' . $e->getFile() . ' ' . $e->getLine());
