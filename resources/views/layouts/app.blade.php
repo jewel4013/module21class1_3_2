@@ -113,6 +113,14 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js" ></script>
         <script src="https://cdn.jsdelivr.net/npm/axios@1.18.1/dist/axios.min.js"></script>
         @stack('script')
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function(){
+                let user = JSON.parse(localStorage.getItem('user'));
+                document.getElementById('userAvatar').src = user.avatar;
+                document.getElementById('userName').innerHTML = user.name;
+            });
+        </script>
         
     </body>
 </html>

@@ -50,19 +50,21 @@
 
 @push('script')
     <script>
-       getProfile();
+
+        document.addEventListener('DOMContentLoaded', function(){    
+            let user = JSON.parse(localStorage.getItem('user'));        
+            document.getElementById('name').value = user.name;
+            document.getElementById('phone').value = user.phone;
+            document.getElementById('address').value = user.address;            
+        });
+        // getProfile();
         async function getProfile() {
             try {                
                 let response = await axios.get('/backend/profile');
                 console.log(response);
 
                 if(response.status === 200){
-                    let data = response.data.data;
-                    document.getElementById('userAvatar').src = data.avatar;
-                    document.getElementById('userName').innerHTML = data.name;
-
-
-
+                    let data = response.data.data;     
                     document.getElementById('name').value = data.name;
                     document.getElementById('phone').value = data.phone;
                     document.getElementById('address').value = data.address;

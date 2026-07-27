@@ -71,7 +71,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js" ></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@1.18.1/dist/axios.min.js"></script>
 
-    <script>
+    <script type="text/javascript">
         async function handleLogin() {
             // ১. আইডি (ID) ধরে ইনপুট ডাটা রিড করা
             let email = document.getElementById('email').value.trim();
@@ -89,6 +89,9 @@
                     });
                     console.log(response);
                     if(response.status === 200 && response.data.status === true){
+
+                        localStorage.setItem('user', JSON.stringify(response.data.data));
+                        
                         toastr.success(response.data.message);
                         setTimeout(function() {
                             window.location.href = '/';

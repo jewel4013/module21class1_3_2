@@ -8,6 +8,7 @@ use App\Http\Requests\ForgotPasswordOtpSendRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegistrerRequest;
 use App\Http\Requests\ResetPasswordRequest;
+use App\Http\Resources\UserResource;
 use App\Mail\SendOtpMail;
 use App\Models\Otp;
 use App\Models\Profile;
@@ -89,7 +90,7 @@ class AuthController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Login Success',
-                'data' => $userData,
+                'data' => new UserResource($user),
             ], 200)->cookie('userToken', $token['token'], $exp);
         } catch (\Exception $e) {
             Log::critical($e->getMessage().' '.$e->getFile().' '.$e->getLine());

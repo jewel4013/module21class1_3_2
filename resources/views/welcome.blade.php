@@ -31,7 +31,8 @@
 
 @push('script')
     <script>
-        getDashboardData();
+        
+        //getDashboardData();
         async function getDashboardData() {
             try {                
                 let response = await axios.get('/backend/profile');

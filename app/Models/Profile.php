@@ -16,6 +16,7 @@ class Profile extends Model
 
 
 
+    // php artisan storage:link
     public function getAvatarUrlAttribute()
     {
         if($this->avatar) {
