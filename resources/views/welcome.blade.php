@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Dashboard')
-@section('PageHeader', 'User Dashboard')
+@section('PageHeader')
+    <span class="d-none d-sm-inline">User</span> Dashboard
+@endsection
 
 @push('mainSection')
  <!-- ড্যাশবোর্ড মেইন কার্ড গ্রিড জোন -->

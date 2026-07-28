@@ -85,7 +85,7 @@
                     </div>
                     <div class="d-flex align-items-center">
                         <div class="dropdown-toggle border-white m-lg-1" data-bs-toggle="dropdown">
-                            Log in as: <span id="userName" class="text-dark fw-bold" role="button">Jewel R</span>
+                            <span class="d-none d-sm-inline">Log in as:</span> <span id="userName" class="text-dark fw-bold" role="button">Jewel R</span>
                         </div>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ route('profileShow') }}">Profile</a></li>
@@ -117,9 +117,28 @@
         <script>
             document.addEventListener('DOMContentLoaded', function(){
                 let user = JSON.parse(localStorage.getItem('user'));
+
+
+                
                 document.getElementById('userAvatar').src = user.avatar;
                 document.getElementById('userName').innerHTML = user.name;
             });
+           
+        </script>
+        <script>
+            // টোস্টার গ্লোবাল কনফিগারেশন (অ্যানিমেশন ও স্পিড কন্ট্রোল)
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "2000"
+            };
+
+            // 🚀 লারাভেল সেশন মেসেজ টু জাভাস্ক্রিপ্ট টোস্টার কনভার্টার
+            // ব্যাকএন্ড থেকে 'toastr-error' আসামাত্রই এটি ব্রাউজারে টোস্টার ফায়ার করবে
+            @if(session('toastr-error'))
+                toastr.error("{{ session('toastr-error') }}");
+            @endif
         </script>
         
     </body>

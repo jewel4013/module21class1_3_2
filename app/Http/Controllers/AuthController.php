@@ -72,7 +72,7 @@ class AuthController extends Controller
     {
         try {
             $user = User::whereEmail($request->email)->first();            
-            if(!Hash::check($request->password, $user->password)){
+            if(!$user ||!Hash::check($request->password, $user->password)){
                 return response()->json([
                     'status' => true,
                     'errors' => ['Invalid Credentials'],

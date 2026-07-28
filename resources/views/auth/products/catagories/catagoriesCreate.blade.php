@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title', 'Profile')
-@section('PageHeader', 'Profile')
+@section('title', 'Catagory Create')
+@section('PageHeader', 'Catagory Create')
 
 @push('mainSection')
  <!-- ড্যাশবোর্ড মেইন কার্ড গ্রিড জোন -->

@@ -12,7 +12,7 @@ class CatagoryController extends Controller
      */
     public function index()
     {
-        //
+        return view('auth.products.catagories.catagories');
     }
 
     /**
@@ -20,7 +20,7 @@ class CatagoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('auth.products.catagories.catagoriesCreate');
     }
 
     /**
