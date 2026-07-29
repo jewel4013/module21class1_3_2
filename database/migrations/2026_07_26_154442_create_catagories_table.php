@@ -13,8 +13,11 @@ return new class extends Migration
     {
         Schema::create('catagories', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('description');
+            $table->string('name')->unique();
+            $table->text('description')->nullable();
+            $table->string('image')->nullable();
+            $table->string('banner')->nullable();
+            $table->boolean('is_popular')->default(false);
             $table->timestamps();
         });
     }

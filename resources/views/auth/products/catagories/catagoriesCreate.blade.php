@@ -7,35 +7,46 @@
      <div class="row g-3">
                 <!-- নাম -->
         <div class="col-12 col-md-6">
-            <label class="form-label text-dark-50 small fw-bold">Name</label>
+            <label class="form-label text-dark-50 small fw-bold" for="name">Name *</label>
             <input type="text" id="name" class="form-control bg-white border-secondary rounded-3 py-2" placeholder="John Doe">
             <div id="error-name" class="invalid-feedback"></div>
         </div>
 
+        
+        <!-- Catagory Image ছবি -->
         <div class="col-12 col-md-6">
-            <label class="form-label text-dark-50 small fw-bold">Address</label>
-            <input type="text" id="address" class="form-control bg-white border-secondary rounded-3 py-2" placeholder="Dhaka, Bangladesh">
+            <label class="form-label text-dark-50 small fw-bold" for="image">Image. <span class="opacity-25">File type: jpg, jpeg, png</span></label>
+            <input type="file" id="image" class="form-control bg-white border-secondary rounded-3 py-2">
+            <div id="error-avatar" class="invalid-feedback"></div>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <label class="form-label text-dark-50 small fw-bold" for="description">Descripton</label>
+            <textarea type="text" id="description" rows="4" class="form-control bg-white border-secondary rounded-3 py-2" placeholder="Dhaka, Bangladesh"></textarea>
             <div id="error-name" class="invalid-feedback"></div>
         </div>
 
-        <!-- ইমেইল -->
+        <!-- Catagory Banner ছবি -->
         <div class="col-12 col-md-6">
-            <label class="form-label text-dark-50 small fw-bold">Phone</label>
-            <input type="email" id="phone" class="form-control bg-white border-secondary rounded-3 py-2" placeholder="+880-195983***">
-            <div id="error-email" class="invalid-feedback"></div>
-        </div>
-
-        <!-- প্রোফাইল ছবি (Avatar) -->
-        <div class="col-12 col-md-6">
-            <label class="form-label text-dark-50 small fw-bold">Profile Photo (Avatar). File type: jpg, jpeg, png</label>
-            <input type="file" id="avatar" class="form-control bg-white border-secondary rounded-3 py-2">
+            <label class="form-label text-dark-50 small fw-bold">Banner. <span class="opacity-25">File type: jpg, jpeg, png</span></label>
+            <input type="file" id="banner" class="form-control bg-white border-secondary rounded-3 py-2">
             <div id="error-avatar" class="invalid-feedback"></div>
         </div>
+
+        <!-- Catagory Banner ছবি -->
+        <div class="col-12 col-md-6">
+            <div class="form-check">
+                <input class="form-check-input border-black" type="checkbox" value="1" id="is_popular">
+                <label class="form-check-label" for="is_popular">Popular Catagory</label>
+            </div>
+            <div id="is_popular" class="invalid-feedback"></div>
+        </div>
+
     </div>
 
     <!-- সাবমিট বোতাম (onClick ইভেন্ট চালিত) -->
     <div class="mt-4">
-        <button type="button" onclick="handleProfile()" class="btn btn-success rounded-3 py-2.5 fw-bold text-uppercase tracking-wide shadow-sm">
+        <button type="button" onclick="handleCatagory()" class="btn btn-success rounded-3 py-2.5 fw-bold text-uppercase tracking-wide shadow-sm">
             Save Changes
         </button>
     </div>
@@ -50,45 +61,12 @@
 
 @push('script')
     <script>
-
-        document.addEventListener('DOMContentLoaded', function(){    
-            let user = JSON.parse(localStorage.getItem('user'));        
-            document.getElementById('name').value = user.name;
-            document.getElementById('phone').value = user.phone;
-            document.getElementById('address').value = user.address;            
-        });
-        // getProfile();
-        // async function getProfile() {
-        //     try {                
-        //         let response = await axios.get('/backend/profile');
-        //         console.log(response);
-
-        //         if(response.status === 200){
-        //             let data = response.data.data;     
-        //             document.getElementById('name').value = data.name;
-        //             document.getElementById('phone').value = data.phone;
-        //             document.getElementById('address').value = data.address;
-                    
-        //         } else {
-        //             console.log(response.data);                    
-        //             toastr.error(response.data.message || "Failed to load profile data.");
-        //         }
-        //     } catch (error) {
-        //         console.error(error);
-        //         if (error.response && error.response.data) {
-        //             toastr.error(error.response.data.message);
-        //         } else {
-        //             toastr.error("Something went wrong while fetching profile.");
-        //         }
-        //     }
-        // }
-
-        async function handleProfile() {
+        async function handleCatagory() {
             let name = document.getElementById('name').value.trim();
-            let phone = document.getElementById('phone').value.trim();
-            let address = document.getElementById('address').value.trim();
-            let avatar = document.getElementById('avatar').files[0];
-            let avatarFile = avatar; // প্রথম ফাইল অবজেক্টটি নেওয়া হলো
+            let description = document.getElementById('description').value.trim();
+            let image = document.getElementById('image').files[0];
+            let banner = document.getElementById('banner').files[0];
+            let is_popular = document.getElementById('is_popular').checked;
 
             
             if(name.length == 0){
@@ -96,24 +74,29 @@
             }else{
                 let formData = new FormData();
                 formData.append('name', name);
-                formData.append('phone', phone);
-                formData.append('address', address);
+                formData.append('description', description);
 
-                if(avatarFile) {
-                    formData.append('avatar', avatarFile);
+                if(image) {
+                    formData.append('image', image);
+                }
+                if(banner) {
+                    formData.append('banner', banner);
+                }
+                if(is_popular) {
+                    formData.append('is_popular', is_popular);
                 }
                 try {
-                    let response = await axios.post('/backend/profile-update', formData, {
+                    let response = await axios.post('/backend/catagories', formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         }
                     });
                     console.log(response);
                     if(response.status === 200 && response.data.status === true){
-                        localStorage.setItem('user', JSON.stringify(response.data.data));
+                        // localStorage.setItem('user', JSON.stringify(response.data.data));
                         toastr.success(response.data.message);
                         setTimeout(function() {
-                            window.location.href = '/profile';
+                            window.location.href = '/catagories';
                         }, 1000);
                     }else if(response.response.status === 422){
                         let errors = response.response.data.errors;

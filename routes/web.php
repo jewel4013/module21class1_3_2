@@ -10,14 +10,13 @@ use App\Http\Middleware\JwtAuthMiddleware;
 use Illuminate\Support\Facades\Route;
 
 
-//publci routes\
-Route::middleware('guest')->group(function(){
-    Route::get('/register', [AuthController::class, 'showRegister'])->name('registerView');
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('loginView');
-    Route::get('/forgot', [AuthController::class, 'showForgot'])->name('forgotView');
-    Route::get('/verifyotp', [AuthController::class, 'verifyOTP'])->name('verifyotpView');
-    Route::get('/passwordreset', [AuthController::class, 'showPasswordReset'])->name('passwordResetView');
-});
+//publci routes
+Route::get('/register', [AuthController::class, 'showRegister'])->name('registerView');
+Route::get('/login', [AuthController::class, 'showLogin'])->name('loginView');
+Route::get('/forgot', [AuthController::class, 'showForgot'])->name('forgotView');
+Route::get('/verifyotp', [AuthController::class, 'verifyOTP'])->name('verifyotpView');
+Route::get('/passwordreset', [AuthController::class, 'showPasswordReset'])->name('passwordResetView');
+
 Route::prefix('backend')->group(function(){
     Route::post('/register', [AuthController::class, 'register'])->name('register'); // রেজিস্ট্রেশন পেজ রেন্ডার করা
     Route::post('/login', [AuthController::class, 'loing'])->name('login'); // রেজিস্ট্রেশন পেজ রেন্ডার করা
@@ -34,6 +33,7 @@ Route::prefix('backend')->group(function(){
 Route::middleware(['jwtauth'])->group( function(){
     Route::prefix('backend')->group(function(){
         //Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
+        Route::post('/catagories', [CatagoryController::class, 'store'])->name('catagoriesStore');
         Route::post('/profile-update', [ProfileController::class, 'profileUpdate'])->name('profileUpdate');    
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); // রেজিস্ট্রেশন পেজ রেন্ডার করা
     });
