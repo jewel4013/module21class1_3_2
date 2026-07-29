@@ -54,74 +54,45 @@
                     <th style="width: 40px;"><input type="checkbox" class="form-check-input"></th>
                     <th>Action</th>
                     <th>Category</th>
-                    <th>Parent Category</th>
-                    <th>Class</th>
+                    <th>Image</th>
+                    <th>Desctiption</th>                    
                     <th>Number of Product</th>
                     <th>Stock Quantity</th>
                     <th>Stock Worth (Price/Cost)</th>
                     <th>Show Home</th>
                     <th>Show Menu</th>
-                    <th>Feature Category</th>
-                    <th>Priority</th>
                 </tr>
             </thead>
             <tbody id="categoryTableBody">
                 <!-- আইটেম ১ -->
-                <tr>
-                    <td><input type="checkbox" class="form-check-input"></td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle py-1 px-2" type="button" data-bs-toggle="dropdown">Action</button>
-                            <ul class="dropdown-menu shadow-sm">
-                                <li><a class="dropdown-menu-item p-2 text-decoration-none d-block text-dark small" href="#" onclick="editCategory(1)">✏️ Edit</a></li>
-                                <li><a class="dropdown-menu-item p-2 text-decoration-none d-block text-danger small" href="#" onclick="deleteCategory(1)">🗑️ Delete</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="d-flex align-items-center gap-2">
-                            <img src="https://placehold.co" class="rounded border" alt="img">
-                            <span class="fw-semibold text-primary">Baby Bag</span>
-                        </div>
-                    </td>
-                    <td class="text-muted">Baby hand bag</td>
-                    <td><span class="badge bg-light text-dark border">style1</span></td>
-                    <td class="fw-bold">3</td>
-                    <td>195</td>
-                    <td><span class="text-success fw-bold">BDT 117000</span> / <span class="text-muted small">BDT 121140</span></td>
-                    <td><span class="text-success">yes</span></td>
-                    <td><span class="text-success">yes</span></td>
-                    <td><span class="text-success">yes</span></td>
-                    <td>-</td>
-                </tr>
-                                <!-- আইটেম ২ (ইমেজ অনুযায়ী ফাঁকা স্টক ডেমো) -->
-                <tr>
-                    <td><input type="checkbox" class="form-check-input"></td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle py-1 px-2" type="button" data-bs-toggle="dropdown">Action</button>
-                            <ul class="dropdown-menu shadow-sm">
-                                <li><a class="dropdown-menu-item p-2 text-decoration-none d-block text-dark small" href="#">✏️ Edit</a></li>
-                                <li><a class="dropdown-menu-item p-2 text-decoration-none d-block text-danger small" href="#">🗑️ Delete</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="d-flex align-items-center gap-2">
-                            <img src="https://placehold.co" class="rounded border" alt="img">
-                            <span class="fw-semibold text-primary">Baby bag 2</span>
-                        </div>
-                    </td>
-                    <td class="text-muted">N/A</td>
-                    <td><span class="badge bg-light text-dark border">style1</span></td>
-                    <td class="fw-bold">0</td>
-                    <td class="text-danger fw-bold">0</td>
-                    <td>BDT 0 / <span class="text-muted small">BDT 0</span></td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td><span class="text-success">yes</span></td>
-                    <td>2</td>
-                </tr>
+                @foreach ($catagories as $catagory )
+                    <tr>
+                        <td><input type="checkbox" class="form-check-input"></td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle py-1 px-2" type="button" data-bs-toggle="dropdown">Action</button>
+                                <ul class="dropdown-menu shadow-sm">
+                                    <li><a class="dropdown-menu-item p-2 text-decoration-none d-block text-dark small" href="#" onclick="editCategory(1)">✏️ Edit</a></li>
+                                    <li><a class="dropdown-menu-item p-2 text-decoration-none d-block text-danger small" href="#" onclick="deleteCategory(1)">🗑️ Delete</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td >{{$catagory->name}}</td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <img src="{{ $catagory->imageUrl }}" class="rounded border" alt="img" style="width: 38px; height: 38px; object-fit: cover; display: block;">
+                            </div>
+                        </td>
+                        <td>{{$catagory->description}}</td>
+                        <td>150</td>
+                        <td>2540</td>
+                        <td>254000</td>
+                        <td><span class="text-success">{{$catagory->show_home ? 'yes' : '-'}}</span></td>
+                        <td><span class="text-success">{{$catagory->show_menu ? 'yes' : '-'}}</span></td>
+                    </tr>                    
+                @endforeach
+                
+                                 
             </tbody>
         </table>
     </div>

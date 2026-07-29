@@ -17,7 +17,9 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->string('banner')->nullable();
-            $table->boolean('is_popular')->default(false);
+            $table->boolean('is_popular')->default(0);
+            $table->boolean('show_home')->default(0);
+            $table->boolean('show_menu')->default(0);
             $table->timestamps();
         });
     }

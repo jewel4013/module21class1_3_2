@@ -7,7 +7,30 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\isAdmin;
 use App\Http\Middleware\JwtAuthMiddleware;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
+
+
+/**
+ * @param string|array $route
+ * @return string
+ */
+
+//do it 
+function set_active($route): string {
+    if(is_array($route)){
+        return in_array(Request::path(), $route) ? 'active' : '';
+    }
+    return Request::path() == $route ? 'active' : '';
+}
+//and apply it
+// {{ set_active(['catagories', 'catagories/create']) }}
+
+
+
+
+
+
 
 
 //publci routes
@@ -39,6 +62,7 @@ Route::middleware(['jwtauth'])->group( function(){
     });
     Route::get('/', [dashboardController::class, 'index'])->name('dashboard');    
     Route::get('/profile', [ProfileController::class, 'index'])->name('profileShow');
+    Route::get('/settings', [ProfileController::class, 'settingsShow'])->name('settingsShow');
 
 
     Route::middleware('isAdmin')->group(function(){

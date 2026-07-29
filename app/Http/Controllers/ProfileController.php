@@ -107,4 +107,10 @@ class ProfileController extends Controller
     {
         //
     }
+
+
+    public function settingsShow()
+    {
+        return view('auth.settings');
+    }
 }

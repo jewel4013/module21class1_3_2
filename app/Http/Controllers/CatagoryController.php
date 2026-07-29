@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CatagoryStoreRequest;
 use App\Models\Catagory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CatagoryController extends Controller
 {
@@ -13,7 +14,8 @@ class CatagoryController extends Controller
      */
     public function index()
     {
-        return view('auth.products.catagories.catagories');
+        $catagories = Catagory::orderBy('name', 'asc')->get();
+        return view('auth.products.catagories.catagories', compact('catagories'));
     }
 
     /**
@@ -30,8 +32,7 @@ class CatagoryController extends Controller
     public function store(CatagoryStoreRequest $request)
     {
         $validated = $request->validated();
-        try {
-            Catagory::create($validated);
+        try {            
             if ($request->hasFile('image')) {
                 $path = $request->file('image')->store('images', 'public');
                 $validated['image'] = $path;
@@ -44,11 +45,15 @@ class CatagoryController extends Controller
             } else {
                 $validated['banner'] = null; // কোনো ছবি না দিলে ডিফল্ট নাল যাবে
             }   
+            
+            
+            Catagory::create($validated);
             return response()->json([
                 'status' => true,
                 'message' => 'Catagory created successfully',
             ], 201);
         } catch (\Exception $e) {
+            Log::critical($e->getMessage().' '.$e->getFile().' '.$e->getLine());
             return response()->json([
                 'status' => false,
                 'message' => 'Something went wrong, please try again',
