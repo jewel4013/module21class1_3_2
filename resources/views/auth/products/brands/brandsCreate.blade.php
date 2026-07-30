@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title', 'Catagory Create')
-@section('PageHeader', 'Catagory Create')
+@section('title', 'Brand Create')
+@section('PageHeader', 'Brand Create')
 
 @push('mainSection')
  <!-- ড্যাশবোর্ড মেইন কার্ড গ্রিড জোন -->
@@ -28,10 +28,6 @@
 
         <!-- Catagory Banner ছবি -->
         <div class="col-12 col-md-6">
-            <label class="form-label text-dark-50 small fw-bold">Banner. <span class="opacity-25">File type: jpg, jpeg, png</span></label>
-            <input type="file" id="banner" class="form-control bg-white border-secondary rounded-3 py-2">
-            <div id="error-banner" class="invalid-feedback"></div>
-
             <div class="d-flex justify-content-between flex-wrap gap-4 mt-3 p-2 ">
                 <div class="form-check">
                     <input class="form-check-input border-secondary" type="checkbox" id="is_popular">
@@ -60,8 +56,8 @@
 
     <!-- সাবমিট বোতাম (onClick ইভেন্ট চালিত) -->
     <div class="mt-4">
-        <button type="button" onclick="handleCatagory()" class="btn btn-success rounded-3 py-2.5 fw-bold text-uppercase tracking-wide shadow-sm">
-            Save Changes
+        <button type="button" onclick="handleBrand()" class="btn btn-success rounded-3 py-2.5 fw-bold text-uppercase tracking-wide shadow-sm">
+            Creat Brand
         </button>
     </div>
     
@@ -75,11 +71,10 @@
 
 @push('script')
     <script>
-        async function handleCatagory() {
+        async function handleBrand() {
             let name = document.getElementById('name').value.trim();
             let description = document.getElementById('description').value.trim();
             let image = document.getElementById('image').files[0];
-            let banner = document.getElementById('banner').files[0];
             let is_popular = document.getElementById('is_popular').checked ? 1 : 0;
             let show_home = document.getElementById('show_home').checked ? 1 : 0;
             let show_menu = document.getElementById('show_menu').checked ? 1 : 0;
@@ -90,18 +85,15 @@
             }else{
                 let formData = new FormData();
                 formData.append('name', name);
-                formData.append('description', description);
                 if(image) {
                     formData.append('image', image);
                 }
-                if(banner) {
-                    formData.append('banner', banner);
-                }
+                formData.append('description', description);
                 formData.append('is_popular', is_popular);
                 formData.append('show_home', show_home);
                 formData.append('show_menu', show_menu);
                 try {
-                    let response = await axios.post('/backend/catagories', formData, {
+                    let response = await axios.post('/backend/brands/create', formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         }
@@ -111,7 +103,7 @@
                     if(response.status === 201 && response.data.status === true){
                         toastr.success(response.data.message);
                         setTimeout(function() {
-                            window.location.href = '/catagories';
+                            window.location.href = '/brands';
                         }, 1000);
                     }else if(response.response.status === 422){
                         let errors = response.response.data.errors;

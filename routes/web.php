@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CatagoryController;
 use App\Http\Controllers\dashboardController;
 use App\Http\Controllers\ProductController;
@@ -55,8 +56,7 @@ Route::prefix('backend')->group(function(){
 // protected routes
 Route::middleware(['jwtauth'])->group( function(){
     Route::prefix('backend')->group(function(){
-        //Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
-        Route::post('/catagories', [CatagoryController::class, 'store'])->name('catagoriesStore');
+        //Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');        
         Route::post('/profile-update', [ProfileController::class, 'profileUpdate'])->name('profileUpdate');    
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); // রেজিস্ট্রেশন পেজ রেন্ডার করা
     });
@@ -66,8 +66,18 @@ Route::middleware(['jwtauth'])->group( function(){
 
 
     Route::middleware('isAdmin')->group(function(){
+        Route::get('/brands', [BrandController::class, 'index'])->name('brandsShow');
+        Route::get('/brands/create', [BrandController::class, 'create'])->name('brandsCreate');
+        Route::post('/backend/brands/create', [BrandController::class, 'store'])->name('brandsStore');
+        
+        
+        
         Route::get('/catagories', [CatagoryController::class, 'index'])->name('catagoriesShow');
         Route::get('/catagories/create', [CatagoryController::class, 'create'])->name('catagoriesCreate');
+        Route::post('/backend/catagories', [CatagoryController::class, 'store'])->name('catagoriesStore');
+
+        Route::get('/products', [ProductController::class, 'index'])->name('productsShow');
+        Route::get('/products/create', [ProductController::class, 'create'])->name('productsCreate');
     }); 
 });
     

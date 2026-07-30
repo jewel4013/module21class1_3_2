@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProdictCreatRequest;
+use App\Models\Brand;
+use App\Models\Catagory;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -12,7 +15,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        
+        return view('auth.products.products');
     }
 
     /**
@@ -20,15 +23,17 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $catagories = Catagory::all();
+        $brands = Brand::all();
+        return view('auth.products.productsCreate', compact('catagories', 'brands'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProdictCreatRequest $request)
     {
-        //
+        
     }
 
     /**

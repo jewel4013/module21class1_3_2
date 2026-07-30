@@ -1,7 +1,7 @@
 @extends('layouts.app')
-@section('title', 'Catagories')
+@section('title', 'Brands')
 @section('PageHeader')
-    <span class="d-none d-sm-inline">Product</span> Catagories
+    Brands
 @endsection
 
 @push('style')
@@ -18,8 +18,8 @@
     
     <!-- 🚀 ১. ওপরের ডাইনামিক অ্যাকশন বাটন জোন (হুবহু ইমেজের মতো রঙিন) -->
     <div class="d-flex flex-wrap gap-2 mb-4">
-        <a href="/catagories/create" class="btn btn-success rounded-2 fw-semibold px-3 btn-sm">➕ Add Category</a>
-        <button class="btn btn-purple text-white rounded-2 fw-semibold px-3 btn-sm" style="background-color: #6f42c1;">📥 Import Category</button>
+        <a href="/brands/create" class="btn btn-success rounded-2 fw-semibold px-3 btn-sm">➕ Add Brand</a>
+        <button class="btn btn-purple text-white rounded-2 fw-semibold px-3 btn-sm" style="background-color: #6f42c1;">📥 Import Brands</button>
         <button class="btn btn-info text-white rounded-2 fw-semibold px-3 btn-sm">Active Home</button>
         <button class="btn btn-warning text-dark rounded-2 fw-semibold px-3 btn-sm">De-Active Home</button>
         <button class="btn btn-primary text-white rounded-2 fw-semibold px-3 btn-sm">Active Menu</button>
@@ -61,19 +61,20 @@
                 <tr>
                     <th style="width: 40px;"><input type="checkbox" class="form-check-input"></th>
                     <th>Action</th>
-                    <th>Category</th>
+                    <th>Brand</th>
                     <th>Image</th>
                     <th>Desctiption</th>                    
                     <th>Number of Product</th>
                     <th>Stock Quantity</th>
                     <th>Stock Worth (Price/Cost)</th>
+                    <th>Status</th>
                     <th>Show Home</th>
                     <th>Show Menu</th>
                 </tr>
             </thead>
             <tbody id="categoryTableBody">
                 <!-- আইটেম ১ -->
-                @foreach ($catagories as $catagory )
+                @foreach ($brands as $brand )
                     <tr>
                         <td><input type="checkbox" class="form-check-input"></td>
                         <td>
@@ -85,18 +86,19 @@
                                 </ul>
                             </div>
                         </td>
-                        <td >{{$catagory->name}}</td>
+                        <td >{{$brand->name}}</td>
                         <td>
                             <div class="d-flex align-items-center gap-2">
-                                <img src="{{ $catagory->imageUrl }}" class="rounded border" alt="img" style="width: 38px; height: 38px; object-fit: cover; display: block;">
+                                <img src="{{ $brand->imageUrl }}" class="rounded border" alt="img" style="width: 38px; height: 38px; object-fit: cover; display: block;">
                             </div>
                         </td>
-                        <td>{{ Str::limit($catagory->description, 80)}}</td>
+                        <td>{{ Str::limit($brand->description, 80)}}</td>
+                        <td>0</td>
                         <td>150</td>
                         <td>2540</td>
                         <td>254000</td>
-                        <td><span class="text-success">{{$catagory->show_home ? 'yes' : '-'}}</span></td>
-                        <td><span class="text-success">{{$catagory->show_menu ? 'yes' : '-'}}</span></td>
+                        <td><span class="text-success">{{$brand->show_home ? 'yes' : '-'}}</span></td>
+                        <td><span class="text-success">{{$brand->show_menu ? 'yes' : '-'}}</span></td>
                     </tr>                    
                 @endforeach
                 

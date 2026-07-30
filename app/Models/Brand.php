@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['name', 'description', 'image', 'banner', 'is_popular', 'show_home', 'show_menu'])] 
-class Catagory extends Model
+
+#[Fillable(['name', 'image', 'slug', 'description', 'status', 'is_popular', 'show_home', 'show_menu'])]
+class Brand extends Model
 {
+    
+
     public function getImageUrlAttribute()
     {
         if($this->image) {
@@ -15,14 +18,6 @@ class Catagory extends Model
         }
         return asset('');
         // return $this->image ? Storage::url($this->image) : null;
-    }
-    public function getBannerUrlAttribute()
-    {
-        if($this->banner) {
-            return asset('storage/'.$this->banner);
-        }
-        return asset('');
-        // return $this->banner ? Storage::url($this->banner) : null;
     }
 
     public function product(){
