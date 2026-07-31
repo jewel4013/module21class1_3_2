@@ -7,6 +7,8 @@ use App\Models\Brand;
 use App\Models\Catagory;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
 
 class ProductController extends Controller
 {
@@ -15,7 +17,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view('auth.products.products');
+        $products = Product::orderBy('name', 'asc')->get();
+        return view('auth.products.products', compact('products'));
     }
 
     /**
@@ -33,6 +36,36 @@ class ProductController extends Controller
      */
     public function store(ProdictCreatRequest $request)
     {
+        $validated = $request->validated();
+        try{
+            $validated['slug'] = Str::slug($validated['name']);
+            $validated['status'] = true;
+            if($request->hasFile('image')){
+                $path = $request->file('image')->store('images/products', 'public');
+                $validated['image'] = $path;
+            }
+            if($request->hasFile('multiple_images')){
+                $imageArray = [];
+                foreach($request->file('multiple_images') as $image){
+                    $path = $image->store('images/products', 'public');
+                    $imageArray[] = $path;
+                }
+                $validated['multiple_images'] = $imageArray;    
+            }            
+
+            // return $validated;
+            Product::create($validated);
+            return response()->json([
+                'status' => true,
+                'message' => 'Product created successfully',
+            ], 201);    
+        }catch(\Exception $e){
+            return response()->json([
+                'status' => false,
+                'message' => 'Something went wrong, please try again',
+            ], 500);
+        }
+
         
     }
 

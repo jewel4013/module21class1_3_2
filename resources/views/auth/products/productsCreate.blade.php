@@ -161,6 +161,9 @@
             let product_price = document.getElementById('product_price').value;
             let multiple_images = document.getElementById('multiple_images').files;
             let description = document.getElementById('description').value;
+            let is_popular = document.getElementById('is_popular').checked ? 1 : 0;
+            let show_home = document.getElementById('show_home').checked ? 1 : 0;
+            let show_menu = document.getElementById('show_menu').checked ? 1 : 0;
 
 
             
@@ -192,7 +195,7 @@
                     }
                 }
                 try {
-                    let response = await axios.post('/backend/catagories', formData, {
+                    let response = await axios.post('/products/create', formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         }
@@ -202,7 +205,7 @@
                     if(response.status === 201 && response.data.status === true){
                         toastr.success(response.data.message);
                         setTimeout(function() {
-                            window.location.href = '/catagories';
+                            window.location.href = '/products';
                         }, 1000);
                     }else if(response.response.status === 422){
                         let errors = response.response.data.errors;

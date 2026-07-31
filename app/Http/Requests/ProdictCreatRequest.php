@@ -35,9 +35,9 @@ class ProdictCreatRequest extends FormRequest
             'multiple_images' => 'nullable|array',
             'multiple_images.*' => 'image|mimes:jpeg,png,jpg,svg|max:1024',
             'description' => 'nullable|string|max:5000',
-            'is_popular' => 'nullable|in:1,0',
-            'show_home' => 'nullable|in:1,0',
-            'show_menu' => 'nullable|in:1,0',
+            'is_popular' => 'nullable|boolean',
+            'show_home' => 'nullable|boolean',
+            'show_menu' => 'nullable|boolean',
         ];
     }
 

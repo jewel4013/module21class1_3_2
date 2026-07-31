@@ -74,10 +74,11 @@ Route::middleware(['jwtauth'])->group( function(){
         
         Route::get('/catagories', [CatagoryController::class, 'index'])->name('catagoriesShow');
         Route::get('/catagories/create', [CatagoryController::class, 'create'])->name('catagoriesCreate');
-        Route::post('/backend/catagories', [CatagoryController::class, 'store'])->name('catagoriesStore');
+        Route::post('/catagories/create', [CatagoryController::class, 'store'])->name('catagoriesStore');
 
         Route::get('/products', [ProductController::class, 'index'])->name('productsShow');
         Route::get('/products/create', [ProductController::class, 'create'])->name('productsCreate');
+        Route::post('/products/create', [ProductController::class, 'store'])->name('productsStore');
     }); 
 });
     

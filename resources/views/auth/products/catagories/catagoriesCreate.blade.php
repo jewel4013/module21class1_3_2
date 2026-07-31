@@ -101,7 +101,7 @@
                 formData.append('show_home', show_home);
                 formData.append('show_menu', show_menu);
                 try {
-                    let response = await axios.post('/backend/catagories', formData, {
+                    let response = await axios.post('/catagories/create', formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         }
