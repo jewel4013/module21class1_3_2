@@ -20,9 +20,9 @@
             ← Back to List
         </a>
     </div>
-    <div class="container-fluid pt-4 bg-light h-auto">
+    <div class="container-fluid pt-2 bg-light h-auto">
         
-        <div class="row g-4">
+        <div class="row g-4" style="margin-left: calc(-1 * var(--bs-gutter-x)); margin-right: calc(-1 * var(--bs-gutter-x));">
 
             <!-- 🖼️ বাম পাশের প্যানেল: ইমেজ গ্যালারি আর্কিটেকচার (ইমেজ সোয়াপার ম্যাজিক) -->
             <div class="col-12 col-lg-5">

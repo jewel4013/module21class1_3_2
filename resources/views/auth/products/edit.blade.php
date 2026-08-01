@@ -1,9 +1,14 @@
 @extends('layouts.app')
-@section('title', 'Product Create')
-@section('PageHeader', 'Product Create')
+@section('title', 'Product Modify')
+@section('PageHeader', 'Product Modify')
 
 @push('mainSection')
  <!-- ড্যাশবোর্ড মেইন কার্ড গ্রিড জোন -->
+    <div class="">
+        <a href="{{route('productShow', $product->slug)}}" class="btn btn-outline-secondary btn-sm px-3 rounded-2 fw-semibold">
+            ← Back to Product
+        </a>
+    </div>
     <div class="card border-0 shadow-sm rounded-4 p-4 bg-white text-dark mt-4">
         <h4 class="fw-bold text-dark mb-4">✏️ Edit Product: {{ $product->name }}</h4>
         
@@ -28,24 +33,56 @@
                 </select>
             </div>
 
-            <!-- ৩. Selling Price -->
+            <!-- ৩. Brand Dropdown (ডাইনামিকালি কারেন্ট ক্যাটাগরি সিলেক্টেড থাকবে) -->
+            <div class="col-12 col-md-4">
+                <label class="form-label fw-semibold text-secondary">Brands *</label>
+                <select id="brand_id" class="form-select form-select-sm">
+                    @foreach($brands as $brand)
+                        <!-- 🎯 ট্রিকস: প্রোডাক্টের brand_id এর সাথে লুপের আইডি মিললে সেটি selected হয়ে থাকবে -->
+                        <option value="{{ $brand->id }}" {{ $product->brand_id == $brand->id ? 'selected' : '' }}>
+                            {{ $brand->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+             <!-- ৪. Product Cost -->
+            <div class="col-12 col-md-4">
+                <label class="form-label fw-semibold text-secondary">Product Cost *</label>
+                <input type="number" id="product_cost" class="form-control form-control-sm" value="{{ $product->product_cost }}">
+            </div>
+            <!-- ৫. Product Price -->
             <div class="col-12 col-md-4">
                 <label class="form-label fw-semibold text-secondary">Product Price *</label>
                 <input type="number" id="product_price" class="form-control form-control-sm" value="{{ $product->product_price }}">
             </div>
 
-            <!-- ৪. Main Single Image (পাশে ছোট করে বর্তমানে আপলোড থাকা ইমেজটির প্রিভিউ দেখানো) -->
+            <!-- ৭. Priority -->
+            <div class="col-12 col-md-4">
+                <label class="form-label fw-semibold text-secondary">Priority</label>
+                <input type="number" id="priority" class="form-control form-control-sm" value="{{ $product->priority }}">
+            </div>
+            
+            <!-- 📝 ৬. ডিফল্ট নাল যাবে প্রোডাক্ট ডিটেইলস / ডেসক্রিপশন এরিয়া --> 
+            <div class="col-12 col-md-12">
+                <label class="form-label fw-semibold text-secondary">Product Details</label>
+                <!-- 🎯 এডিটরের জন্য ক্লাসিক টেক্সট-এরিয়া, আইডি ধরে আমরা জাভাস্ক্রিপ্ট দিয়ে রিড করব -->
+                <textarea id="description" class="form-control border-light-subtle rounded-2" rows="6" placeholder="Enter product descriptions..." value="">{{ $product->description }}</textarea>
+                <div id="error-description" class="invalid-feedback"></div>
+            </div>
+
+            <!-- ৮. Main Single Image (পাশে ছোট করে বর্তমানে আপলোড থাকা ইমেজটির প্রিভিউ দেখানো) -->
             <div class="col-12 col-md-6">
                 <label class="form-label fw-semibold text-secondary">Update Product Image</label>
                 <input type="file" id="image" class="form-control form-control-sm mb-2">
                 
                 <!-- 🎯 উইন্ডোজ ব্যাকস্ল্যাশ বাগ ক্লিন করে ছবি প্রদর্শন -->
-                @php $clean_main = str_replace('\\', '/', $product->image); @endphp
+                {{-- @php $clean_main = str_replace('\\', '/', $product->image); @endphp --}}
                 <div class="small text-muted mb-1">Current Image:</div>
-                <img src="{{ asset('storage/' . $clean_main) }}" class="rounded border p-1 bg-light" style="width: 60px; height: 60px; object-fit: cover;">
+                <img src="{{ asset($product->imageUrl) }}" class="rounded border p-1 bg-light" style="width: 100px; height: 100px; object-fit: cover;" alt="img">
             </div>
 
-            <!-- ৫. Multiple Images Preview Zone (জেসন থেকে পুরানো ছবিগুলো লুপে দেখানো) -->
+            <!-- ৯. Multiple Images Preview Zone (জেসন থেকে পুরানো ছবিগুলো লুপে দেখানো) -->
             <div class="col-12 col-md-6">
                 <label class="form-label fw-semibold text-secondary">Update Gallery Images</label>
                 <input type="file" id="multiple_images" class="form-control form-control-sm mb-2" multiple>
@@ -55,7 +92,7 @@
                     @if($product->multiple_images && is_array($product->multiple_images))
                         @foreach($product->multiple_images as $gallery_img)
                             @php $clean_gallery = str_replace('\\', '/', $gallery_img); @endphp
-                            <img src="{{ asset('storage/' . $clean_gallery) }}" class="rounded border p-1" style="width: 45px; height: 45px; object-fit: cover;">
+                            <img src="{{ asset('storage/' . $clean_gallery) }}" class="rounded border p-1" style="width: 85px; height: 85px; object-fit: cover;">
                         @endforeach
                     @else
                         <span class="text-muted extra-small">No gallery uploaded</span>
@@ -63,8 +100,8 @@
                 </div>
             </div>
 
-            <!-- ⚙️ ৬. জাভাস্ক্রিপ্ট ফ্রেন্ডলি ৩টি চেকবক্স (লারাভেলের কন্ডিশনে টিক মার্ক বসবে) -->
-            <div class="col-12 mt-4 d-flex flex-column gap-2 fw-semibold text-dark">
+            <!-- ⚙️ ১০. জাভাস্ক্রিপ্ট ফ্রেন্ডলি ৩টি চেকবক্স (লারাভেলের কন্ডিশনে টিক মার্ক বসবে) -->
+            <div class="col-12 mt-4 d-flex justify-content-start gap-2 fw-semibold text-dark">
                 
                 <!-- চেকবক্স ১: is_popular -->
                 <div class="form-check">
@@ -86,7 +123,7 @@
                 </div>
             </div>
 
-            <!-- ৭. আপডেট বাটন (আপনার স্যারের ফর্ম-লেস ওনক্লিক মেথড) -->
+            <!-- ১১. আপডেট বাটন (আপনার স্যারের ফর্ম-লেস ওনক্লিক মেথড) -->
             <div class="col-12 mt-4">
                 <!-- 🚀 এখানে আমরা কারেন্ট প্রোডাক্টের আইডি বা স্লাগ প্যারামিটার হিসেবে পাস করে দেব -->
                 <button class="btn text-white px-4 fw-semibold rounded-2 shadow-sm" 
@@ -111,16 +148,17 @@
 
 @push('script')
     <script>
-        async function handleProductCreate() {
+        async function handleProductUpdate(slug) {
             let name = document.getElementById('name').value.trim();            
             let brand_id = document.getElementById('brand_id').value;
             let category_id = document.getElementById('category_id').value;
             let priority = document.getElementById('priority').value;
-            let image = document.getElementById('image').files[0];
             let product_cost = document.getElementById('product_cost').value;
             let product_price = document.getElementById('product_price').value;
-            let multiple_images = document.getElementById('multiple_images').files;
             let description = document.getElementById('description').value;
+
+            let image = document.getElementById('image').files[0];
+            let multiple_images = document.getElementById('multiple_images').files;
             let is_popular = document.getElementById('is_popular').checked ? 1 : 0;
             let show_home = document.getElementById('show_home').checked ? 1 : 0;
             let show_menu = document.getElementById('show_menu').checked ? 1 : 0;
@@ -146,6 +184,7 @@
                 formData.append('is_popular', is_popular);
                 formData.append('show_home', show_home);
                 formData.append('show_menu', show_menu);
+
                 if(image) {
                     formData.append('image', image);
                 }
@@ -155,7 +194,7 @@
                     }
                 }
                 try {
-                    let response = await axios.post('/products/{{ $product->slug }}/update', formData, {
+                    let response = await axios.post('/products/'+slug+'/update', formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         }
@@ -165,7 +204,7 @@
                     if(response.status === 201 && response.data.status === true){
                         toastr.success(response.data.message);
                         setTimeout(function() {
-                            window.location.href = '/products/{{ $product->slug }}';
+                            window.location.href = '/products/' + response.data.slug;
                         }, 1000);
                     }else if(response.response.status === 422){
                         let errors = response.response.data.errors;
