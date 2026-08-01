@@ -36,6 +36,19 @@ class Product extends Model
         // return $this->image ? Storage::url($this->image) : null;
     }
 
+    public function getGalleryUrlsAttribute(): array
+    {
+        $formattedUrls = [];
+        if ($this->multiple_images && is_array($product->multiple_images ?? $this->multiple_images)) {
+            foreach ($this->multiple_images as $path) {
+                if (file_exists(public_path($path))) {
+                    $formattedUrls[] = asset($path); // প্রতিটা ছবির রেডি ইউআরএল পুশ হচ্ছে
+                }
+            }
+        }
+        return $formattedUrls; // 🎯 আউটপুট: সম্পূর্ণ রেডিমেড ইউআরএল-এর একটি পিএইচপি অ্যারে
+    }
+
 
     protected static function booted(){
         static::creating(function($product){

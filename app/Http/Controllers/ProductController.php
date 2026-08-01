@@ -72,17 +72,26 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show($slug)
     {
-        //
+        $product = Product::with(['catagory', 'brand'])->where('slug', $slug)->firstOrFail();
+        return view('auth.products.productShow', compact('product'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function edit($slug)
     {
-        //
+        // ১. স্লাগ ধরে ডাটাবেজ থেকে প্রোডাক্টটি খুঁজে বের করা
+        $product = Product::where('slug', $slug)->firstOrFail();
+        
+        // ২. ড্রপডাউনে দেখানোর জন্য সমস্ত সচল ক্যাটাগরি ও ব্র্যান্ডের ডাটা নেওয়া
+        $catagories = Catagory::all();
+        $brands = Brand::where('status', 1)->get();
+
+        // ৩. ৩টি ডাটাই একসাথে এডিট ব্লেড ফাইলে পাঠানো হলো
+        return view('auth.products.edit', compact('product', 'catagories', 'brands'));
     }
 
     /**

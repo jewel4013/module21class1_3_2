@@ -195,7 +195,7 @@
                     }
                 }
                 try {
-                    let response = await axios.post('/products/create', formData, {
+                    let response = await axios.post('/products/store', formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         }

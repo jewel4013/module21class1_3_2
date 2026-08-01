@@ -18,15 +18,28 @@ use Illuminate\Support\Facades\Route;
  */
 
 //do it 
-function set_active($route): string {
-    if(is_array($route)){
-        return in_array(Request::path(), $route) ? 'active' : '';
-    }
-    return Request::path() == $route ? 'active' : '';
-}
+// function set_active($route): string {
+//     if(is_array($route)){
+//         return in_array(Request::path(), $route) ? 'active' : '';
+//     }
+//     return Request::path() == $route ? 'active' : '';
+// }
 //and apply it
 // {{ set_active(['catagories', 'catagories/create']) }}
 
+function set_active($route): string {
+    // 🚀 লারাভেলের অফিশিয়াল Request::is() মেথড স্টার (*) প্যাটার্ন নিখুঁতভাবে রিড করতে পারে
+    if (is_array($route)) {
+        foreach ($route as $r) {
+            if (Request::is($r)) {
+                return 'active';
+            }
+        }
+        return '';
+    }    
+    return Request::is($route) ? 'active' : '';
+}
+// {{ set_active(['catagories', 'catagories/create']) }}
 
 
 
@@ -76,9 +89,12 @@ Route::middleware(['jwtauth'])->group( function(){
         Route::get('/catagories/create', [CatagoryController::class, 'create'])->name('catagoriesCreate');
         Route::post('/catagories/create', [CatagoryController::class, 'store'])->name('catagoriesStore');
 
-        Route::get('/products', [ProductController::class, 'index'])->name('productsShow');
+        Route::get('/products', [ProductController::class, 'index'])->name('products');
         Route::get('/products/create', [ProductController::class, 'create'])->name('productsCreate');
-        Route::post('/products/create', [ProductController::class, 'store'])->name('productsStore');
+        Route::post('/products/store', [ProductController::class, 'store'])->name('productsStore');
+        Route::get('/products/{slug}', [ProductController::class, 'show'])->name('productShow');
+        Route::get('/products/{slug}/edit', [ProductController::class, 'edit'])->name('productEdit');
+        Route::post('/products/{slug}/update', [ProductController::class, 'update'])->name('productUpdate');
     }); 
 });
     

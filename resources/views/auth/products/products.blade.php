@@ -18,7 +18,7 @@
     
     <!-- 🚀 ১. ওপরের ডাইনামিক অ্যাকশন বাটন জোন (হুবহু ইমেজের মতো রঙিন) -->
     <div class="d-flex flex-wrap gap-2 mb-4">
-        <a href="/products/create" class="btn btn-success rounded-2 fw-semibold px-3 btn-sm">➕ Add Category</a>
+        <a href="/products/create" class="btn btn-success rounded-2 fw-semibold px-3 btn-sm">➕ Add Product</a>
         <button class="btn btn-purple text-white rounded-2 fw-semibold px-3 btn-sm" style="background-color: #6f42c1;">📥 Import Category</button>
         <button class="btn btn-info text-white rounded-2 fw-semibold px-3 btn-sm">Active Home</button>
         <button class="btn btn-warning text-dark rounded-2 fw-semibold px-3 btn-sm">De-Active Home</button>
@@ -80,8 +80,9 @@
                             <div class="dropdown">
                                 <button class="btn btn-outline-secondary btn-sm dropdown-toggle py-1 px-2" type="button"  data-bs-toggle="dropdown">Action</button>
                                 <ul class="dropdown-menu shadow-sm"  data-bs-popper="static" style="z-index: 1050;">
-                                    <li><a class="dropdown-menu-item p-2 text-decoration-none d-block text-dark small link-primary" href="#" onclick="editCategory(1)">✏️ Edit</a></li>
-                                    <li><a class="dropdown-menu-item p-2 text-decoration-none d-block text-danger small link-primary" href="#" onclick="deleteCategory(1)">🗑️ Delete</a></li>
+                                    <li><a class="dropdown-menu-item p-2 text-decoration-none d-block text-dark small link-primary" href="{{route('productShow', $product->slug)}}" >👀 View</a></li>
+                                    <li><a class="dropdown-menu-item p-2 text-decoration-none d-block text-dark small link-primary" href="#" >✏️ Edit</a></li>
+                                    <li><a class="dropdown-menu-item p-2 text-decoration-none d-block text-danger small link-primary" href="#" >🗑️ Delete</a></li>
                                 </ul>
                             </div>
                         </td>
@@ -94,7 +95,7 @@
                         <td>{{ Str::limit($product->description, 80)}}</td>
                         <td>150</td>
                         <td>{{$product->catagory->name}}</td>
-                        <td>{{$product->brand->name}}</td>
+                        <td>{{$product->brand?->name ?? '-'}}</td>
                         <td><span class="text-success">{{$product->show_home ? 'yes' : '-'}}</span></td>
                         <td><span class="text-success">{{$product->show_menu ? 'yes' : '-'}}</span></td>
                     </tr>                    

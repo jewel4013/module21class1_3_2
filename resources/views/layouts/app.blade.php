@@ -117,8 +117,6 @@
         <script>
             document.addEventListener('DOMContentLoaded', function(){
                 let user = JSON.parse(localStorage.getItem('user'));
-
-
                 
                 document.getElementById('userAvatar').src = user.avatar;
                 document.getElementById('userName').innerHTML = user.name;
