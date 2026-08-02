@@ -8,7 +8,8 @@
                         <li class="sidebar-item {{ set_active('/') }}"><a href="/"><span>📊</span> <span class="ms-2">Dashboard</span></a></li>
                         <li class="sidebar-item {{ Request::is('sales') ?  'active' : '' }}"><a href="/sales"><span>💰</span> <span class="ms-2">Sales Register</span></a></li>
                         <li class="sidebar-item {{ set_active(['catagories', 'catagories/create']) }}"><a href="/catagories"><span>📇</span> <span class="ms-2">Catagory</span></a></li>
-                        <li class="sidebar-item {{ set_active(['products', 'products/create', 'products/*', 'brands', 'brands/create',]) }}"><a href="/products"><span>🛍️</span> <span class="ms-2">Products</span></a></li>
+                        <li class="sidebar-item {{ set_active(['products', 'products/*', 'brands', 'brands/*',]) }}"><a href="/products"><span>🛍️</span> <span class="ms-2">Products</span></a></li>
+                        <li class="sidebar-item {{ set_active(['customers','customers/*']) }}"><a href="/customers"><span>👥</span> <span class="ms-2">Customers</span></a></li>
                         <li class="sidebar-item {{ Request::is('stock') ?  'active' : '' }}"><a href="/stock"><span>📦</span> <span class="ms-2">Stock Inventory</span></a></li>
                         <li class="sidebar-item {{ Request::is('invoices') ?  'active' : '' }}"><a href="/invoices"><span>📋</span> <span class="ms-2">Invoices</span></a></li>                        
                         <li class="sidebar-item {{ Request::is('report') ?  'active' : '' }}"><a href="/report"><span>✒️</span> <span class="ms-2">Report</span></a></li>
@@ -40,10 +41,11 @@
                 <div class="offcanvas-body p-0">
                     <ul class="sidebar-menu">
                         <span id="adminNavbarTogole" style="display: none">
-                        <li class="sidebar-item {{ Request::is('/') ?  'active' : '' }}"><a href="/"><span>📊</span> <span class="ms-2">Dashboard</span></a></li>
+                        <li class="sidebar-item {{ set_active('/') }}"><a href="/"><span>📊</span> <span class="ms-2">Dashboard</span></a></li>
                         <li class="sidebar-item {{ Request::is('sales') ?  'active' : '' }}"><a href="/sales"><span>💰</span> <span class="ms-2">Sales Register</span></a></li>
-                        <li class="sidebar-item {{ Request::is('catagories.create.*') ?  'active' : '' }}"><a href="/catagories"><span>📇</span> <span class="ms-2">Catagory</span></a></li>
-                        <li class="sidebar-item {{ Request::is('products') ?  'active' : '' }}"><a href="/products"><span>🛍️</span> <span class="ms-2">Products</span></a></li>
+                        <li class="sidebar-item {{ set_active(['catagories', 'catagories/create']) }}"><a href="/catagories"><span>📇</span> <span class="ms-2">Catagory</span></a></li>
+                        <li class="sidebar-item {{ set_active(['products', 'products/*', 'brands', 'brands/*',]) }}"><a href="/products"><span>🛍️</span> <span class="ms-2">Products</span></a></li>
+                        <li class="sidebar-item {{ set_active(['customers','customers/*']) }}"><a href="/customers"><span>👥</span> <span class="ms-2">Customers</span></a></li>
                         <li class="sidebar-item {{ Request::is('stock') ?  'active' : '' }}"><a href="/stock"><span>📦</span> <span class="ms-2">Stock Inventory</span></a></li>
                         <li class="sidebar-item {{ Request::is('invoices') ?  'active' : '' }}"><a href="/invoices"><span>📋</span> <span class="ms-2">Invoices</span></a></li>                        
                         <li class="sidebar-item {{ Request::is('report') ?  'active' : '' }}"><a href="/report"><span>✒️</span> <span class="ms-2">Report</span></a></li>

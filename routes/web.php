@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CatagoryController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\dashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -88,6 +89,14 @@ Route::middleware(['jwtauth'])->group( function(){
         Route::get('/catagories', [CatagoryController::class, 'index'])->name('catagoriesShow');
         Route::get('/catagories/create', [CatagoryController::class, 'create'])->name('catagoriesCreate');
         Route::post('/catagories/create', [CatagoryController::class, 'store'])->name('catagoriesStore');
+
+        Route::get('/customers', [CustomerController::class, 'index'])->name('customers');
+        Route::get('/customers/create', [CustomerController::class, 'create'])->name('customersCreate');
+        Route::post('/customers/create', [CustomerController::class, 'store'])->name('customersStore');
+        Route::get('/customers/{customer}', [CustomerController::class, 'show'])->name('customersShow');
+        Route::get('/customers/{customer}/edit', [CustomerController::class, 'edit'])->name('customersEdit');
+        Route::post('/customers/{customer}/update', [CustomerController::class, 'update'])->name('customersUpdate');
+        Route::post('/customers/{customer}/delete', [CustomerController::class, 'destroy'])->name('customersDestroy');
 
         Route::get('/products', [ProductController::class, 'index'])->name('products');
         Route::get('/products/create', [ProductController::class, 'create'])->name('productsCreate');
