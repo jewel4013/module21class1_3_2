@@ -96,7 +96,7 @@ Route::middleware(['jwtauth'])->group( function(){
         Route::get('/customers/{customer}', [CustomerController::class, 'show'])->name('customersShow');
         Route::get('/customers/{customer}/edit', [CustomerController::class, 'edit'])->name('customersEdit');
         Route::post('/customers/{customer}/update', [CustomerController::class, 'update'])->name('customersUpdate');
-        Route::post('/customers/{customer}/delete', [CustomerController::class, 'destroy'])->name('customersDestroy');
+        Route::delete('/customers/{customer}/delete', [CustomerController::class, 'destroy'])->name('customersDestroy');
 
         Route::get('/products', [ProductController::class, 'index'])->name('products');
         Route::get('/products/create', [ProductController::class, 'create'])->name('productsCreate');

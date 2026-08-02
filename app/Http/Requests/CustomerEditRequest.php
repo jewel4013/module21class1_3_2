@@ -6,6 +6,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class CustomerEditRequest extends FormRequest
 {
@@ -24,12 +25,10 @@ class CustomerEditRequest extends FormRequest
      */
     public function rules(): array
     {
-        $customerRoute = $this->route('customer');
-        // যদি রাউট থেকে সরাসরি মডেল অবজেক্ট আসে তবে তার আইডি নেওয়া হবে, অন্যথায় র-আইডি নেওয়া হবে 
-        $customerId = $customerRoute instanceof \App\Models\Customer ? $customerRoute->id : $customerRoute;
+
         return [
             'name' => 'nullable|string|max:255',
-            'phone' => 'required|string|max:255|unique:customers,phone,'.$customerId, // ক্যাসিক টেক্সট-এর সাথে লুপের আইডি মিললে সেটি selected হয়ে থাকবে
+            'phone' => 'required|string|max:255|unique:customers,phone,'.$this->route('customer')->id,
             'email' => 'nullable|email|max:255',
             'address' => 'nullable|string|max:255',
             'thana' => 'nullable|string|max:255',

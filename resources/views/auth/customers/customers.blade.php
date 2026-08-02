@@ -74,7 +74,7 @@
                                 <button class="btn btn-outline-secondary btn-sm dropdown-toggle py-1 px-2" type="button"  data-bs-toggle="dropdown">Action</button>
                                 <ul class="dropdown-menu shadow-sm"  data-bs-popper="static" style="z-index: 1050;">
                                     <li><a class="dropdown-menu-item p-2 text-decoration-none d-block text-dark small link-primary" href="{{route('customersEdit', $customer->id)}}" >✏️ Edit</a></li>
-                                    <li><a class="dropdown-menu-item p-2 text-decoration-none d-block text-danger small link-primary" href="{{route('customersDestroy', $customer->id)}}" >🗑️ Delete</a></li>
+                                    <li><a class="dropdown-menu-item p-2 text-decoration-none d-block text-danger small link-primary" href="" onclick="event.preventDefault(); handleCustomerDelete({{ $customer->id }})" >🗑️ Delete</a></li>
                                 </ul>
                             </div>
                         </td>
@@ -108,6 +108,30 @@
 
 </div>
 
+
+
+
+
+<!-- সুন্দর অ্যানিমেটেড কনফার্মেশন মডাল -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm"> <!-- স্ক্রিনের ঠিক মাঝখানে আনার জন্য modal-dialog-centered -->
+        <div class="modal-content border-0 shadow">
+            <div class="modal-body text-center p-4">
+                <!-- অ্যানিমেটেড ওয়ার্নিং আইকন -->
+                <div class="text-danger mb-3">
+                    <i class="fas fa-exclamation-circle fa-3x animate__animated animate__pulse animate__infinite"></i>
+                </div>
+                <h5>Are you sure?</h5>
+                <p class="text-muted small mb-4">You won't be able to revert this customer data!</p>
+                
+                <button type="button" class="btn btn-secondary btn-sm px-3 me-2" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="confirmDeleteBtn" class="btn btn-danger btn-sm px-3">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
  
     
 @endpush
@@ -139,5 +163,41 @@
         //         }
         //     }
         // }
+
+        
+        // ডিলিট করার জন্য একটি গ্লোবাল ভ্যারিয়েবল
+        let customerIdToDelete = null;
+        let deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+
+        // ১. বাটনে ক্লিক করলে মডাল ওপেন হবে এবং আইডি সেভ হবে
+        function handleCustomerDelete(customerId) {
+            customerIdToDelete = customerId;
+            deleteModal.show(); // মডালটি মাঝখানে ভেসে উঠবে
+        }
+
+        // ২. মডালের 'Yes, Delete' বাটনে ক্লিক করলে এই ইভেন্টটি রান হবে
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
+            try {
+                let response = await axios.delete('/customers/' + customerIdToDelete + '/delete');
+
+                if (response.status === 201 && response.data.status === true) {
+                    deleteModal.hide(); // মডালটি বন্ধ হবে
+                    
+                    // আপনার অলরেডি সেটআপ করা টোস্টার নোটিফিকেশন
+                    toastr.success(response.data.message); 
+                    
+                    // ১ সেকেন্ড পর পেজ রিলোড হবে
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    toastr.error("Could not delete customer.");
+                }
+            } catch (err) {
+                toastr.error("Something went wrong. Please try again.");
+            }
+        });
+
     </script>
 @endpush
+               

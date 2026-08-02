@@ -65,20 +65,16 @@ class CustomerController extends Controller
     {        
         return view('auth.customers.customersEdit' , compact('customer'));
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(CustomerEditRequest $request, Customer $customer)
     {
         $validated = $request->validated();
         try{
-            $validated['user_id'] = Auth::id();  // Assuming you want to associate the customer with the currently authenticated user
+            $validated['user_id'] = Auth::id() ?? null;  // Assuming you want to associate the customer with the currently authenticated user
             $customer->update($validated);
             return response()->json([
                 'status' => true,
                 'message' => 'Customer updated successfully',
-            ], 200);
+            ], 201);
         }catch(\Exception $e){
             Log::critical($e->getMessage().' '.$e->getFile().' '.$e->getLine());
             return response()->json([
@@ -93,6 +89,18 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
+        try{
+            $customer->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'Customer deleted successfully',
+            ], 201);
+        }catch(\Exception $e){
+            Log::critical($e->getMessage().' '.$e->getFile().' '.$e->getLine());
+            return response()->json([
+                'status' => false,
+                'message' => 'Something went wrong, please try again',
+            ], 500);
+        }       
     }
 }

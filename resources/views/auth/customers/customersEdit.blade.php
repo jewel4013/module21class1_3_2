@@ -70,7 +70,7 @@
                 <!-- 🚀 ওনক্লিক মেথড অ্যাসাইন করা হলো, যা আপনার প্রজেক্টের এক্সিওস ফ্লো হ্যান্ডেল করবে -->
                 <button class="btn text-white px-4 fw-semibold rounded-2 shadow-sm" 
                         style="background-color: #6f42c1; font-size: 14px;" 
-                        onclick="handleCustomersUpdate()">
+                        onclick="handleCustomersUpdate({{ $customer->id }})">
                     Submit
                 </button>
             </div>
@@ -84,7 +84,8 @@
 
 @push('script')
     <script>
-        async function handleCustomersUpdate() {
+        // let customerId = "{{ $customer->id }}"; 
+        async function handleCustomersUpdate(id) {
             let name = document.getElementById('name').value.trim();            
             let phone = document.getElementById('phone').value.trim();            
             let email = document.getElementById('email').value.trim();            
@@ -98,8 +99,16 @@
             if(phone.length === 0){
                 toastr.error("Phone field is required!");
             }else{
+                 let formData = new FormData();
+                formData.append('name', name);
+                formData.append('phone', phone);
+                formData.append('email', email);
+                formData.append('address', address);
+                formData.append('thana', thana);
+                formData.append('district', district);
                 try {
-                    let response = await axios.post('/customers/'+customerId+'/update', formData, {
+                    
+                    let response = await axios.post('/customers/'+id+'/update', formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         }
@@ -109,7 +118,7 @@
                     if(response.status === 201 && response.data.status === true){
                         toastr.success(response.data.message);
                         setTimeout(function() {
-                            window.location.href = '/customers/' + customerId;
+                            window.location.href = '/customers';
                         }, 1000);
                     }else if(response.response.status === 422){
                         let errors = response.response.data.errors;
@@ -127,14 +136,14 @@
                         let errors = err.response.data.errors;
                         if(Array.isArray(errors)){  
                             errors.forEach(msg => toastr.error(msg));
-                        }else{
+                        } else {
                             for (let field in errors) {
                                 if(errors.hasOwnProperty(field)){
                                     toastr.error(errors[field][0]);
                                 }
                             }
                         }                        
-                    }else{
+                    } else {
                         toastr.error("Something went wrong. Please try again.");
                     }
                 }
