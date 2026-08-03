@@ -110,6 +110,10 @@ Route::middleware(['jwtauth'])->group( function(){
 
 
 
+Route::get('/layout', function () {
+    return view('textlayout');
+});
+
 
 
 

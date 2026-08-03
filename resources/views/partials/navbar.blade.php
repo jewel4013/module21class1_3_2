@@ -6,7 +6,7 @@
                 <ul class="sidebar-menu">
                     <span id="adminNavbar" style="display: none">
                         <li class="sidebar-item {{ set_active('/') }}"><a href="/"><span>📊</span> <span class="ms-2">Dashboard</span></a></li>
-                        <li class="sidebar-item {{ Request::is('sales') ?  'active' : '' }}"><a href="/sales"><span>💰</span> <span class="ms-2">Sales Register</span></a></li>
+                        <li class="sidebar-item {{ Request::is('sales') ?  'active' : '' }}"><a href="/sales"><span>💰</span> <span class="ms-2">Sales</span></a></li>
                         <li class="sidebar-item {{ set_active(['catagories', 'catagories/create']) }}"><a href="/catagories"><span>📇</span> <span class="ms-2">Catagory</span></a></li>
                         <li class="sidebar-item {{ set_active(['products', 'products/*', 'brands', 'brands/*',]) }}"><a href="/products"><span>🛍️</span> <span class="ms-2">Products</span></a></li>
                         <li class="sidebar-item {{ set_active(['customers','customers/*']) }}"><a href="/customers"><span>👥</span> <span class="ms-2">Customers</span></a></li>
@@ -18,6 +18,7 @@
                         <li class="sidebar-item {{ Request::is('employees') ?  'active' : '' }}"><a href="/employees"><span>👥</span> <span class="ms-2">Employees Manage</span></a></li>
                         <li class="sidebar-item {{ Request::is('peoples') ?  'active' : '' }}"><a href="/peoples"><span>🙎🏻</span> <span class="ms-2">Peoples</span></a></li>
                         <li class="sidebar-item {{ set_active('settings') }}"><a href="/settings"><span>⚙️</span> <span class="ms-2">Settings</span></a></li>                        
+                        <li class="sidebar-item {{ set_active('layout') }}"><a href="/layout"><span>⚙️</span> <span class="ms-2">TestLayout</span></a></li>                        
                     </span>
                     <span id="customerNavbar" style="display: none">
                         <li class="sidebar-item {{ Request::is('/') ?  'active' : '' }}"><a href="/"><span>📊</span> <span class="ms-2">Dashboard</span></a></li>
@@ -42,7 +43,7 @@
                     <ul class="sidebar-menu">
                         <span id="adminNavbarTogole" style="display: none">
                         <li class="sidebar-item {{ set_active('/') }}"><a href="/"><span>📊</span> <span class="ms-2">Dashboard</span></a></li>
-                        <li class="sidebar-item {{ Request::is('sales') ?  'active' : '' }}"><a href="/sales"><span>💰</span> <span class="ms-2">Sales Register</span></a></li>
+                        <li class="sidebar-item {{ Request::is('sales') ?  'active' : '' }}"><a href="/sales"><span>💰</span> <span class="ms-2">Sales</span></a></li>
                         <li class="sidebar-item {{ set_active(['catagories', 'catagories/create']) }}"><a href="/catagories"><span>📇</span> <span class="ms-2">Catagory</span></a></li>
                         <li class="sidebar-item {{ set_active(['products', 'products/*', 'brands', 'brands/*',]) }}"><a href="/products"><span>🛍️</span> <span class="ms-2">Products</span></a></li>
                         <li class="sidebar-item {{ set_active(['customers','customers/*']) }}"><a href="/customers"><span>👥</span> <span class="ms-2">Customers</span></a></li>
@@ -54,6 +55,7 @@
                         <li class="sidebar-item {{ Request::is('employees') ?  'active' : '' }}"><a href="/employees"><span>👥</span> <span class="ms-2">Employees Manage</span></a></li>
                         <li class="sidebar-item {{ Request::is('peoples') ?  'active' : '' }}"><a href="/peoples"><span>🙎🏻</span> <span class="ms-2">Peoples</span></a></li>
                         <li class="sidebar-item {{ Request::is('settings') ?  'active' : '' }}"><a href="/settings"><span>⚙️</span> <span class="ms-2">Settings</span></a></li>
+                        <li class="sidebar-item {{ set_active('layout') }}"><a href="/layout"><span>⚙️</span> <span class="ms-2">TestLayout</span></a></li>
                     </span>
                     <span id="customerNavbarTogole" style="display: none">
                         <li class="sidebar-item {{ Request::is('/') ?  'active' : '' }}"><a href="/"><span>📊</span> <span class="ms-2">Dashboard</span></a></li>
@@ -86,6 +88,41 @@
                 document.getElementById('customerNavbarTogole').style.display = 'block';
             }            
         });
+
+
+        function toggleSidebarMenu(element) {
+        const parentLi = element.closest('.custom-toggle-menu');
+        const currentSubMenu = parentLi.querySelector('.submenu-list');
+        const currentArrow = parentLi.querySelector('.arrow-icon');
+        
+        // অন্য কোনো ওপেন থাকা ড্রপডাউন বন্ধ করা
+        document.querySelectorAll('.custom-toggle-menu').forEach(li => {
+            if (li !== parentLi && li.classList.contains('menu-open')) {
+                li.classList.remove('menu-open');
+                li.querySelector('.submenu-list').classList.add('display-none');
+                li.querySelector('.arrow-icon').style.transform = 'rotate(0deg)';
+            }
+        });
+
+        // বর্তমান আইটেম টগল লক করা
+        if (parentLi.classList.contains('menu-open')) {
+            parentLi.classList.remove('menu-open');
+            currentSubMenu.classList.add('display-none');
+            currentArrow.style.transform = 'rotate(0deg)';
+        } else {
+            parentLi.classList.add('menu-open');
+            currentSubMenu.classList.remove('display-none');
+            currentArrow.style.transform = 'rotate(180deg)';
+        }
+    }
+
+
+
+
+
+
+
+
 
         async function logout() {
             let response = await axios.post('/backend/logout');
