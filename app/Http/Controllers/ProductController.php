@@ -67,34 +67,6 @@ class ProductController extends Controller
                 $validated['multiple_images'] = $imageArray;    
             }      
 
-
-            // if (isset($validated['image'])) {
-            //     $imageFile = $validated['image']; // 🎯 জাদুকরী লাইন: এটি টেম্পোরারি ফাইল হারিয়ে যাওয়া চিরতরে বন্ধ করবে
-            //     $imageName = time() . '_main.' . $imageFile->getClientOriginalExtension();
-                
-            //     // আপনার পছন্দের ডিরেক্টরিতে ফাইল মুভ করা হলো
-            //     $imageFile->move(public_path('images/products'), $imageName);
-            //     $validated['image'] = $imageName;
-            // }
-
-            // // 🚀 ৩. মাল্টিপল গ্যালারি ইমেজ লুপ হ্যান্ডেলিং (একই মেথড লক)
-            // if (isset($validated['multiple_images']) && is_array($validated['multiple_images'])) {
-            //     $imageArray = [];
-                
-            //     foreach ($validated['multiple_images'] as $image) {
-            //         $uniqueName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            //         $image->move(public_path('images/products/gallery'), $uniqueName);
-            //         $imageArray[] = $uniqueName;
-            //     }
-                
-            //     $validated['multiple_images'] = $imageArray;    
-            // } else {
-            //     $validated['multiple_images'] = null;
-            // }
-
-
-
-
             // return $validated;
             Product::create($validated);
             return response()->json([
@@ -114,6 +86,7 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
+    
     public function show($slug)
     {
         $product = Product::with(['catagory', 'brand'])->where('slug', $slug)->firstOrFail();

@@ -68,7 +68,7 @@
                             </thead>
                             <tbody id="cartTableBody" class="border-0">
                                 <!-- 💡 ডেমো কন্টেন্ট (জাভাস্ক্রিপ্ট দিয়ে কার্টে আইটেম যোগ করলে এখানে ইনসার্ট হবে) -->
-                                <tr>
+                                {{-- <tr>
                                     <td class="ps-3">
                                         <span class="d-block fw-bold text-dark">Samsung Galaxy S26 Ultra</span>
                                         <small class="text-muted">Code: SW-000105</small>
@@ -85,7 +85,7 @@
                                     <td class="text-end pe-3">
                                         <button class="btn btn-link text-danger p-0 text-decoration-none" title="Remove">🗑️</button>
                                     </td>
-                                </tr>
+                                </tr> --}}
                                 
                                 <!-- যদি কার্ট খালি থাকে তাহলে নিচের অংশটি দেখাবে -->
                                 {{-- <tr id="emptyCartRow">
@@ -180,6 +180,7 @@
 
 @push('script')
     <script>
+        window.laravelAssetUrl = "{{ asset('storage/') }}/";
         document.getElementById('product_search').addEventListener('input', async function(event) {
             let query = event.target.value.trim();
 
@@ -217,13 +218,16 @@
                     li.className = "list-group-item list-group-item-action d-flex align-items-center justify-content-between cursor-pointer p-2";
                     li.innerHTML = `
                     <div class="d-flex align-items-center gap-2">
-                        <img src="${product.imageUrl}" class="rounded border" style="width: 32px; height: 32px; object-fit: cover;">
+                        <img src="${window.laravelAssetUrl}${product.image}" class="rounded border" style="width: 32px; height: 32px; object-fit: cover;">
                        <div>
                             <strong class="text-dark d-block">${product.name}</strong>
                             <small class="text-muted">Code: ${product.product_code}</small>
                         </div>
                     </div>
-                    <span class="badge bg-purple text-white fw-bold">৳${parseFloat(product.product_price).toFixed(2)}</span>
+                    <div class="align-items-center gap-2">
+                        <span class="text-muted">${product.brand ? product.brand.name : 'No brand mensioned'}</span>
+                        <span class="badge bg-purple text-dark fw-bold" style="font-size: 15px;">৳${parseFloat(product.product_price).toFixed(2)}</span>
+                    </div>
                     `;
         
                     li.onclick = function() {
@@ -237,6 +241,171 @@
                 searchInput.parentNode.appendChild(dropdown);
             }
             
+            // 🎯 ১. গ্লোবাল কার্ট মেমোরি অ্যারে (প্রতিবার আইটেম যোগ করলে এখানে ডাটা জমা হবে)
+            let cart = [];
+            function addToCart(product) {
+                let price = parseFloat(product.product_price || 0);
+                
+                // কার্ট অ্যারের ভেতর অলরেডি এই প্রোডাক্ট আইডিটি যোগ করা আছে কিনা তা খোঁজা
+                let existingItem = cart.find(item => item.id === product.id);
+
+                if (existingItem) {
+                    // শর্ত: প্রোডাক্ট অলরেডি কার্টে থাকলে শুধু কোয়ান্টিটি ১ পিস বাড়বে
+                    existingItem.quantity += 1;
+                } else {
+                    // শর্ত: সম্পূর্ণ নতুন প্রোডাক্ট হলে কার্ট অ্যারেতে অবজেক্ট পুশ হবে
+                    cart.push({
+                        id: product.id,
+                        name: product.name || product.product_name,
+                        code: product.product_code,
+                        price: price,
+                        quantity: 1
+                    });
+                }
+
+                // 🔄 কার্ট টেবিলের এইচটিএমএল ভিজ্যুয়াল এবং ডান পাশের হিসাব আপডেট করা
+                updateCartDOM();
+            }
+
+            /**
+             * 🖼️ ৩. কার্ট অ্যারের ওপর ভিত্তি করে ব্লেড টেবিল রো (DOM) তৈরি করার লাইভ মেথড
+             */
+            function updateCartDOM() {
+                let tableBody = document.getElementById('cartTableBody');
+                if (!tableBody) return;
+
+                // টেবিল বডি সম্পূর্ণ খালি করে নতুন করে লুপ চালানো (ডুপ্লিকেশন এড়াতে)
+                tableBody.innerHTML = '';
+
+                if (cart.length === 0) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-secondary">
+                                <span class="fs-2 d-block mb-1">🛒</span>
+                                Cart is empty. Search products to add.
+                            </td>
+                        </tr>`;
+                    calculateBillingSummary();
+                    return;
+                }
+
+                // কার্ট অ্যারের ওপর লুপ চালিয়ে প্রতিটা প্রোডাক্টের জন্য ডাইনামিক বুটস্ট্র্যাপ রো তৈরি
+                cart.forEach((item, index) => {
+                    let itemTotal = item.price * item.quantity;
+                    let tr = document.createElement('tr');
+                    tr.className = "border-bottom border-light-subtle";
+
+                    tr.innerHTML = `
+                        <td class="ps-3 py-3">
+                            <span class="d-block fw-bold text-dark">${item.name}</span>
+                            <small class="text-muted">Code: ${item.code}</small>
+                        </td>
+                        <td>
+                            <!-- ⚡ প্লাস-মাইনাস কন্ট্রোল প্যানেল উইথ ইনডেক্স লক -->
+                            <div class="input-group input-group-sm border rounded-2 bg-white" style="max-width: 100px;">
+                                <button class="btn btn-light border-0 px-2 py-0 fw-bold" type="button" onclick="changeQty(${index}, -1)">−</button>
+                                <input type="text" class="form-control border-0 text-center fw-bold p-0" value="${item.quantity}" readonly>
+                                <button class="btn btn-light border-0 px-2 py-0 fw-bold" type="button" onclick="changeQty(${index}, 1)">+</button>
+                            </div>
+                        </td>
+                        <td class="text-secondary fw-semibold">৳${item.price.toFixed(2)}</td>
+                        <td class="fw-bold text-dark">৳${itemTotal.toFixed(2)}</td>
+                        <td class="text-end pe-3">
+                            <button class="btn btn-link text-danger p-0 text-decoration-none fw-bold" onclick="removeItem(${index})" title="Remove">🗑️</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+
+                // ডান পাশের বিলিং সামারি ক্যালকুলেট করা
+                calculateBillingSummary();
+            }
+
+            /**
+             * ➕ ➖ ৪. প্লাস-মাইনাস বাটনে ক্লিক করলে কোয়ান্টিটি পরিবর্তন করার মেথড
+             */
+            function changeQty(index, amount) {
+                if (cart[index]) {
+                    cart[index].quantity += amount;
+                    
+                    // সেফটি গার্ড: কোয়ান্টিটি ১ এর নিচে নামলে আইটেমটি কার্ট থেকে ডিলিট হয়ে যাবে
+                    if (cart[index].quantity <= 0) {
+                        cart.splice(index, 1);
+                    }
+                    
+                    updateCartDOM();
+                }
+            }
+
+            /**
+             * 🗑️ ৫. ট্র্যাশ ক্যানে ক্লিক করলে সরাসরি কার্ট থেকে প্রোডাক্ট রিমুভ করার মেথড
+             */
+            function removeItem(index) {
+                cart.splice(index, 1);
+                toastr.warning("Item removed from cart");
+                updateCartDOM();
+            }
+
+            /**
+             * 💰 ৬. ডান পাশের পেমেন্ট ও ডিসকাউন্ট সামারি লাইভ রিল-টাইম হিসাবের কোর মেথড
+             */
+            function calculateBillingSummary() {
+                let subTotal = 0;
+                cart.forEach(item => {
+                    subTotal += item.price * item.quantity;
+                });
+
+                // ডিসকাউন্ট ইনপুট রিড করা
+                let discountInput = document.getElementById('discount_input');
+                let discount = discountInput ? parseFloat(discountInput.value) || 0 : 0;
+
+                let grandTotal = subTotal - discount;
+                if (grandTotal < 0) grandTotal = 0;
+
+                // ব্লেডের ডান পাশের স্প্যানগুলোতে মান পুশ করা
+                document.getElementById('summary_sub_total').innerText = '৳' + subTotal.toFixed(2);
+                document.getElementById('summary_grand_total').innerText = '৳' + grandTotal.toFixed(2);
+                
+                // অটোমেটিক পেইড অ্যামাউন্ট ফিল্ডে গ্র্যান্ড টোটালের মান অ্যাসাইন করা (POS স্পিড ইউএক্স ট্রিকস)
+                let paidInput = document.getElementById('paid_amount');
+                if (paidInput && (paidInput.value === "" || parseFloat(paidInput.value) === 0)) {
+                    paidInput.value = grandTotal.toFixed(2);
+                }
+                
+                calculateDue();
+            }
+
+            // 💵 ৭. ডিসকাউন্ট ইনপুট বক্সে হাত দিলে রিয়েল-টাইমে গ্র্যান্ড টোটাল আপডেট হওয়ার লিসেনার
+            document.getElementById('discount_input').addEventListener('input', calculateBillingSummary);
+            document.getElementById('paid_amount').addEventListener('input', calculateDue);
+
+            /**
+             * ⚠️ ৮. ডিউ (Due) বা বাকি টাকা লাইভ ক্যালকুলেশন অ্যালার্ট বক্স মেথড
+             */
+            function calculateDue() {
+                let grandTotalText = document.getElementById('summary_grand_total').innerText.replace('৳', '').replace(/,/g, '');
+                let grandTotal = parseFloat(grandTotalText) || 0;
+                
+                let paidAmount = parseFloat(document.getElementById('paid_amount').value) || 0;
+                let dueAmount = grandTotal - paidAmount;
+
+                let dueAlertBox = document.getElementById('due_alert_box');
+                let dueSpan = document.getElementById('summary_due_amount');
+
+                if (dueAmount > 0) {
+                    if (dueAlertBox) dueAlertBox.classList.remove('d-none');
+                    if (dueSpan) dueSpan.innerText = '৳' + dueAmount.toFixed(2);
+                } else {
+                    if (dueAlertBox) dueAlertBox.classList.add('d-none');
+                }
+            }
+
+
+
+
+
+
+
             function removeSearchDropdown() {
                 let oldDropdown = document.getElementById('live-search-results');
                 if (oldDropdown) {
