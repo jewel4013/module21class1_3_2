@@ -7,6 +7,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\dashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SaleController;
 use App\Http\Middleware\isAdmin;
 use App\Http\Middleware\JwtAuthMiddleware;
 use Illuminate\Support\Facades\Request;
@@ -104,6 +105,17 @@ Route::middleware(['jwtauth'])->group( function(){
         Route::get('/products/{slug}', [ProductController::class, 'show'])->name('productShow');
         Route::get('/products/{slug}/edit', [ProductController::class, 'edit'])->name('productEdit');
         Route::post('/products/{slug}/update', [ProductController::class, 'update'])->name('productUpdate');
+
+
+        Route::get('/sales', [SaleController::class, 'index'])->name('sales');
+        Route::get('/sales/create', [SaleController::class, 'create'])->name('salesCreate');
+        Route::post('/sales/store', [SaleController::class, 'store'])->name('salesStore');
+        Route::get('/sales/{sale}', [SaleController::class, 'show'])->name('saleShow');
+        Route::get('/sales/{sale}/edit', [SaleController::class, 'edit'])->name('saleEdit');
+        Route::post('/sales/{sale}/update', [SaleController::class, 'update'])->name('saleUpdate');
+        Route::delete('/sales/{sale}/delete', [SaleController::class, 'destroy'])->name('saleDestroy');
+
+        Route::get('/sales/invoice/{sale}', [SaleController::class, 'invoice'])->name('invoiceShow');
     }); 
 });
     

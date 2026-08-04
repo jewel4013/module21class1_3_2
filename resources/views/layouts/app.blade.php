@@ -28,7 +28,7 @@
             color: #ffffff;
             position: sticky;
             top: 0;
-            height: 100vh;
+            height: auto;
             z-index: 1000;
         }
         .sidebar-brand {
