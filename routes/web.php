@@ -105,8 +105,8 @@ Route::middleware(['jwtauth'])->group( function(){
         Route::get('/products/{slug}', [ProductController::class, 'show'])->name('productShow');
         Route::get('/products/{slug}/edit', [ProductController::class, 'edit'])->name('productEdit');
         Route::post('/products/{slug}/update', [ProductController::class, 'update'])->name('productUpdate');
-
-
+        
+        
         Route::get('/sales', [SaleController::class, 'index'])->name('sales');
         Route::get('/sales/create', [SaleController::class, 'create'])->name('salesCreate');
         Route::post('/sales/store', [SaleController::class, 'store'])->name('salesStore');
@@ -114,6 +114,7 @@ Route::middleware(['jwtauth'])->group( function(){
         Route::get('/sales/{sale}/edit', [SaleController::class, 'edit'])->name('saleEdit');
         Route::post('/sales/{sale}/update', [SaleController::class, 'update'])->name('saleUpdate');
         Route::delete('/sales/{sale}/delete', [SaleController::class, 'destroy'])->name('saleDestroy');
+        Route::get('/productssearching', [SaleController::class, 'searchProducts'])->name('searchProducts');
 
         Route::get('/sales/invoice/{sale}', [SaleController::class, 'invoice'])->name('invoiceShow');
     }); 

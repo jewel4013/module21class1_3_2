@@ -1,0 +1,257 @@
+@extends('layouts.app')
+@section('title', 'Sales Board')
+@section('PageHeader')
+    🛒 POS Sales Register
+@endsection
+@section('HeaderDown')
+    📅 Today: <span class="text-dark">'d M, Y'</span>
+@endsection
+
+@push('style')
+    
+
+@endpush
+
+@push('mainSection')
+
+    <div class="container-fluid py-4 bg-light min-vh-100 text-dark" style="font-size: 13px;">
+        
+        {{-- <!-- 🏢 পিওএস হেডার প্যানেল -->
+        <div class="d-flex align-items-center justify-content-between mb-4 bg-white p-3 rounded-4 shadow-sm">
+            <h4 class="fw-bold text-dark m-0">🛒 POS Sales Register</h4>
+            <div class="text-secondary fw-semibold">
+                📅 Date: <span class="text-dark">'d M, Y'</span>
+            </div>
+        </div> --}}
+
+        <div class="row g-4">
+            
+            <!-- 📂 বাম পাশের প্যানেল: কাস্টমার এবং প্রোডাক্ট সিলেকশন এরিয়া -->
+            <div class="col-12 col-lg-7">
+                
+                <!-- ১. কাস্টমার সিলেকশন কার্ড -->
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <label class="form-label fw-bold text-secondary m-0">👥 Select Customer *</label>
+                        <a href="/customers/create" class="text-decoration-none small fw-bold text-purple">+ Add New</a>
+                    </div>
+                    <!-- কাস্টমার ড্রপডাউন (সার্চেবল POS কনভেনশন) -->
+                    <select id="customer_id" class="form-select border-light-subtle rounded-3 text-muted">
+                        <option value="" selected disabled>Search or Select Customer...</option>
+                        <option value="walk-in">🚶 Walk-in Customer (General)</option>
+                        @foreach($customers as $customer)
+                            <option value="{{ $customer->id }}">{{ $customer->name }} (📱 {{ $customer->phone }})</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- ২. প্রোডাক্ট সার্চ এবং বারকোড স্ক্যান এরিয়া -->
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                    <label class="form-label fw-bold text-secondary mb-3">🛍️ Search Products or Scan Barcode</label>
+                    <div class="input-group mb-4 shadow-sm rounded-3 overflow-hidden">
+                        <span class="input-group-text bg-light border-light-subtle text-muted">🔍</span>
+                        <input type="text" id="product_search" class="form-control border-light-subtle" 
+                            placeholder="Type product name or code / Scan Barcode here..." autocomplete="off">
+                    </div>
+                    <!-- 📋 কার্ট আইটেম গ্রিড টেবিল (লাইভ জাভাস্ক্রিপ্ট অ্যাপেন্ড জোন) -->
+                    <h6 class="fw-bold text-dark mb-3">📦 Cart Items</h6>
+                    <div class="table-responsive border rounded-3 bg-light" style="max-height: 280px; overflow-y: auto;">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light text-secondary small fw-bold border-bottom">
+                                <tr>
+                                    <th class="ps-3 py-3">Product Info</th>
+                                    <th class="py-3" style="width: 120px;">Qty</th>
+                                    <th class="py-3">Price</th>
+                                    <th class="py-3">Total</th>
+                                    <th class="py-3 text-end pe-3">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cartTableBody" class="border-0">
+                                <!-- 💡 ডেমো কন্টেন্ট (জাভাস্ক্রিপ্ট দিয়ে কার্টে আইটেম যোগ করলে এখানে ইনসার্ট হবে) -->
+                                <tr>
+                                    <td class="ps-3">
+                                        <span class="d-block fw-bold text-dark">Samsung Galaxy S26 Ultra</span>
+                                        <small class="text-muted">Code: SW-000105</small>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm border rounded-2 bg-white" style="max-width: 100px;">
+                                            <button class="btn btn-light border-0 px-2 py-0 fw-bold" type="button">−</button>
+                                            <input type="text" class="form-control border-0 text-center fw-bold p-0" value="1" readonly>
+                                            <button class="btn btn-light border-0 px-2 py-0 fw-bold" type="button">+</button>
+                                        </div>
+                                    </td>
+                                    <td class="text-secondary fw-semibold">৳১,৫০,০০০.০০</td>
+                                    <td class="fw-bold text-dark">৳১,৫০,০০০.০০</td>
+                                    <td class="text-end pe-3">
+                                        <button class="btn btn-link text-danger p-0 text-decoration-none" title="Remove">🗑️</button>
+                                    </td>
+                                </tr>
+                                
+                                <!-- যদি কার্ট খালি থাকে তাহলে নিচের অংশটি দেখাবে -->
+                                {{-- <tr id="emptyCartRow">
+                                    <td colspan="5" class="text-center py-5 text-secondary">
+                                        <span class="fs-2 d-block mb-1">🛒</span>
+                                        Cart is empty. Search products to add.
+                                    </td>
+                                </tr> --}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- 💰 ডান পাশের প্যানেল: পেমেন্ট এবং অর্ডার সামারি এরিয়া -->
+            <div class="col-12 col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 d-flex flex-column">
+                    <h5 class="fw-bold text-dark mb-4 border-bottom pb-2">💳 Payment & Summary</h5>
+                    
+                    <!-- বিলিং ক্যালকুলেশন মেট তথ্য -->
+                    <div class="d-flex flex-column gap-3 mb-4 bg-light p-3 rounded-4 border">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span class="text-secondary fw-medium">Sub Total</span>
+                            <span id="summary_sub_total" class="fw-bold text-dark">৳১,৫০,০০০.০০</span>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span class="text-secondary fw-medium">Discount (৳)</span>
+                            <input type="number" id="discount_input" class="form-control form-control-sm text-end border-light-subtle rounded-2 fw-bold text-danger" 
+                                value="0" style="max-width: 120px;">
+                        </div>
+                        <hr class="text-muted my-1">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span class="text-dark fw-bold fs-6">Grand Total</span>
+                            <span id="summary_grand_total" class="fw-bold text-purple fs-5">৳১,৫০,০০০.০০</span>
+                        </div>
+                    </div>
+
+                    <!-- পেমেন্ট ইনপুট এবং মেথড জোন -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-12">
+                            <label class="form-label fw-bold text-secondary">Paid Amount (৳) *</label>
+                            <input type="number" id="paid_amount" class="form-control form-control-lg bg-light-subtle border-light-subtle rounded-3 fw-bold text-success fs-4 text-end" 
+                                placeholder="0.00">
+                        </div>
+                        <div class="col-12">
+                            <div class="p-3 bg-danger bg-opacity-10 text-danger rounded-3 fw-bold text-center d-none" id="due_alert_box">
+                                ⚠️ Due Amount: <span id="summary_due_amount">৳0.00</span>
+                            </div>
+                        </div>
+                        
+                        <!-- পেমেন্ট মেথড টাইপ ড্রপডাউন -->
+                        <div class="col-12">
+                            <label class="form-label fw-bold text-secondary">Payment Method</label>
+                            <select id="payment_type" class="form-select border-light-subtle rounded-3 fw-semibold text-dark">
+                                <option value="Cash" selected>💵 Cash</option>
+                                <option value="bKash">📱 bKash</option>
+                                <option value="Nagad">📱 Nagad</option>
+                                <option value="Card">💳 Card Payment</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 🚀 স্যারের ফর্ম-লেস আর্কিটেকচার অনুযায়ী কাস্টম কমপ্লিট সেল বাটন -->
+                    <div class="mt-auto pt-4 border-top">
+                        <button class="btn btn-purple btn-lg w-100 py-3 fw-bold text-white rounded-3 shadow" 
+                                onclick="handleCompleteSale()">
+                            ⚡ Complete Sale & Print Invoice
+                        </button>
+                        <a href="/sales" class="btn btn-outline-secondary btn-sm w-100 mt-2 border-0 rounded-2 fw-medium">
+                            ← Cancel and Back to List
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{{-- ===================================================================================================================================================== --> --}}
+    <!-- 🎨 কাস্টম বেগুনি কালার স্কিম এবং কন্টট্রোল সিএসএস -->
+    <style>
+        .text-purple { color: #6f42c1 !important; }
+        .btn-purple { background-color: #6f42c1 !important; border-color: #6f42c1 !important; transition: 0.2s; }
+        .btn-purple:hover { background-color: #59339e !important; }
+        .bg-light-subtle { background-color: #fcfbfe; }
+        .cursor-pointer { cursor: pointer; }
+        #live-search-results .list-group-item:hover { background-color: #f8f5fe !important; border-left: 3px solid #6f42c1; }
+
+        /* কাস্টম স্ক্রোলবার ফিক্স */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
+@endpush
+
+@push('script')
+    <script>
+        document.getElementById('product_search').addEventListener('input', async function(event) {
+            let query = event.target.value.trim();
+
+             // পুরানো সাজেশন লিস্ট স্ক্রিন থেকে মুছে ফেলা (Reset)
+            removeSearchDropdown();
+            if (query.length < 2) return; // কমপক্ষে ২টি অক্ষর টাইপ করলে তবেই সার্চ শুরু হবে
+            try {
+                // 🚀 এক্সিওস লাইভ গেট রিকোয়েস্ট
+                let response = await axios.get('/productssearching', {
+                    params: { query: query }
+                });
+
+                if (response.status === 200 && response.data.status === true) {   
+                    console.log("Live search response:");                 
+                    let products = response.data.data;
+                    if (products.length > 0) {
+                        renderSearchDropdown(products);
+                    }
+                }
+            } catch (err) {
+                console.error("Live search failed:", err);
+            }
+
+            function renderSearchDropdown(products) {
+                let searchInput = document.getElementById('product_search');
+                let dropdown = document.createElement('ul');
+                dropdown.id = "live-search-results";
+                dropdown.className = "list-group position-relative w-100 shadow-lg rounded-3 mt-1";
+                dropdown.style.zIndex = "1090";
+                dropdown.style.maxHeight = "250px";
+                dropdown.style.overflowY = "auto";
+
+                products.forEach(product => {
+                    let li = document.createElement('li');
+                    li.className = "list-group-item list-group-item-action d-flex align-items-center justify-content-between cursor-pointer p-2";
+                    li.innerHTML = `
+                    <div class="d-flex align-items-center gap-2">
+                        <img src="${product.imageUrl}" class="rounded border" style="width: 32px; height: 32px; object-fit: cover;">
+                       <div>
+                            <strong class="text-dark d-block">${product.name}</strong>
+                            <small class="text-muted">Code: ${product.product_code}</small>
+                        </div>
+                    </div>
+                    <span class="badge bg-purple text-white fw-bold">৳${parseFloat(product.product_price).toFixed(2)}</span>
+                    `;
+        
+                    li.onclick = function() {
+                        addToCart(product);
+                        searchInput.value = '';
+                        removeSearchDropdown();
+                    };
+                    dropdown.appendChild(li);
+                });
+
+                searchInput.parentNode.appendChild(dropdown);
+            }
+            
+            function removeSearchDropdown() {
+                let oldDropdown = document.getElementById('live-search-results');
+                if (oldDropdown) {
+                    oldDropdown.remove();
+                }
+            }
+
+            document.addEventListener('click', function(event) {
+                if(event.target.id !== 'product_search') {
+                    removeSearchDropdown();
+                }
+            });
+
+
+
+        });
+    </script>
+@endpush

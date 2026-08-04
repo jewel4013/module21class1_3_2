@@ -31,9 +31,11 @@ class ProdictCreatRequest extends FormRequest
             'priority' => 'nullable|integer|min:0',
             'product_cost' => 'nullable|numeric|min:0|max:99999999',
             'product_price' => 'required|numeric|min:0|max:99999999',
-            'image' => 'required|image|mimes:jpeg,png,jpg,svg|max:1024',
-            'multiple_images' => 'nullable|array',
-            'multiple_images.*' => 'image|mimes:jpeg,png,jpg,svg|max:10240',
+            // 🚀 চূড়ান্ত ফিক্স: 'image' এর সাথে 'file' রুলসটি যুক্ত করা হলো।
+            // এটি লারাভেল Herd কে বাধ্য করবে পিএইচপি মেমোরিতে ফাইলটির ওনারশিপ প্রপার্টি সবসময় সচল রাখতে!
+            'image'             => 'required|file|image|mimes:jpeg,png,jpg,svg|max:1024',
+            'multiple_images'   => 'nullable|array',
+            'multiple_images.*' => 'file|image|mimes:jpeg,png,jpg,svg|max:1024',
             'description' => 'nullable|string|max:5000',
             'is_popular' => 'nullable|boolean',
             'show_home' => 'nullable|boolean',

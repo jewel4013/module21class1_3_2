@@ -81,7 +81,7 @@
                         <h3 class="fw-bold text-dark mb-1">
                             @yield('PageHeader')
                         </h3>
-                        <p class="text-muted small mb-0 d-none d-sm-block">Welcome back! Manage your outlets live data.</p>
+                        <p class="text-muted small mb-0 d-none d-sm-block">@yield('HeaderDown')</p>
                     </div>
                     <div class="d-flex align-items-center">
                         <div class="dropdown-toggle border-white m-lg-1" data-bs-toggle="dropdown">

@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 
@@ -40,22 +41,59 @@ class ProductController extends Controller
      */
     public function store(ProdictCreatRequest $request)
     {
+        // ১. ফর্ম রিকোয়েস্ট থেকে শতভাগ ভ্যালিডেটেড ডাটা নেওয়া
         $validated = $request->validated();
-        try{
+
+        try {
+            // 🎯 নাম থেকে স্লাগ তৈরি করা এবং স্ট্যাটাস লক করা
             $validated['slug'] = Str::slug($validated['name']);
-            $validated['status'] = true;
+            $validated['status'] = true;           
+
             if($request->hasFile('image')){
-                $path = $request->file('image')->store('images/products', 'public');
-                $validated['image'] = $path;
+                $imageFile = $request->file('image');
+                $imageName = time() . '_main.' . $imageFile->getClientOriginalExtension();
+                
+                // 🎯 storage/app/public/images/products ফোল্ডারে নিখুঁতভাবে স্টোর করা হলো
+                $imageFile->move(storage_path('app/public/images/products'), $imageName);
+                $validated['image'] = 'images/products/' . $imageName;
             }
             if($request->hasFile('multiple_images')){
                 $imageArray = [];
                 foreach($request->file('multiple_images') as $image){
-                    $path = $image->store('images/products', 'public');
-                    $imageArray[] = $path;
+                    $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                    $image->move(storage_path('app/public/images/products/gallery'), $imageName);
+                    $imageArray[] = 'images/products/gallery/' . $imageName;
                 }
                 $validated['multiple_images'] = $imageArray;    
-            }            
+            }      
+
+
+            // if (isset($validated['image'])) {
+            //     $imageFile = $validated['image']; // 🎯 জাদুকরী লাইন: এটি টেম্পোরারি ফাইল হারিয়ে যাওয়া চিরতরে বন্ধ করবে
+            //     $imageName = time() . '_main.' . $imageFile->getClientOriginalExtension();
+                
+            //     // আপনার পছন্দের ডিরেক্টরিতে ফাইল মুভ করা হলো
+            //     $imageFile->move(public_path('images/products'), $imageName);
+            //     $validated['image'] = $imageName;
+            // }
+
+            // // 🚀 ৩. মাল্টিপল গ্যালারি ইমেজ লুপ হ্যান্ডেলিং (একই মেথড লক)
+            // if (isset($validated['multiple_images']) && is_array($validated['multiple_images'])) {
+            //     $imageArray = [];
+                
+            //     foreach ($validated['multiple_images'] as $image) {
+            //         $uniqueName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            //         $image->move(public_path('images/products/gallery'), $uniqueName);
+            //         $imageArray[] = $uniqueName;
+            //     }
+                
+            //     $validated['multiple_images'] = $imageArray;    
+            // } else {
+            //     $validated['multiple_images'] = null;
+            // }
+
+
+
 
             // return $validated;
             Product::create($validated);
