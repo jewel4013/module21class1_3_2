@@ -14,7 +14,7 @@
 
 @push('mainSection')
 
-    <div class="container-fluid py-4 bg-light min-vh-100 text-dark" style="font-size: 13px;">
+    <div class="container-fluid bg-light min-vh-100 text-dark" style="font-size: 13px;">
         
         {{-- <!-- 🏢 পিওএস হেডার প্যানেল -->
         <div class="d-flex align-items-center justify-content-between mb-4 bg-white p-3 rounded-4 shadow-sm">
@@ -48,16 +48,45 @@
                 <!-- ২. প্রোডাক্ট সার্চ এবং বারকোড স্ক্যান এরিয়া -->
                 <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
                     <label class="form-label fw-bold text-secondary mb-3">🛍️ Search Products or Scan Barcode</label>
-                    <div class="input-group mb-4 shadow-sm rounded-3 overflow-hidden">
+                    <div class="input-group mb-4 shadow-sm rounded-3 overflow-visible">
                         <span class="input-group-text bg-light border-light-subtle text-muted">🔍</span>
                         <input type="text" id="product_search" class="form-control border-light-subtle" 
                             placeholder="Type product name or code / Scan Barcode here..." autocomplete="off">
+                        
+                        {{-- <ul id = "live-search-results" class = "mt-5 list-group position-absolute w-100 shadow-lg rounded-3 mt-1" style= "z-index: 1090; max-height: 300px; overflow: hidden">
+                            <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between cursor-pointer p-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <img src="${window.laravelAssetUrl}${product.image}" class="rounded border" style="width: 32px; height: 32px; object-fit: cover;">
+                                <div>
+                                        <strong class="text-dark d-block">${product.name}</strong>
+                                        <small class="text-muted">Code: ${product.product_code}</small>
+                                    </div>
+                                </div>
+                                <div class="align-items-center gap-2">
+                                    <span class="text-muted">${product.brand ? product.brand.name : 'No brand mensioned'}</span>
+                                    <span class="badge bg-purple text-dark fw-bold" style="font-size: 15px;">৳${parseFloat(product.product_price).toFixed(2)}</span>
+                                </div>
+                            </li>
+                             <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between cursor-pointer p-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <img src="${window.laravelAssetUrl}${product.image}" class="rounded border" style="width: 32px; height: 32px; object-fit: cover;">
+                                <div>
+                                        <strong class="text-dark d-block">${product.name}</strong>
+                                        <small class="text-muted">Code: ${product.product_code}</small>
+                                    </div>
+                                </div>
+                                <div class="align-items-center gap-2">
+                                    <span class="text-muted">${product.brand ? product.brand.name : 'No brand mensioned'}</span>
+                                    <span class="badge bg-purple text-dark fw-bold" style="font-size: 15px;">৳${parseFloat(product.product_price).toFixed(2)}</span>
+                                </div>
+                            </li>
+                        </ul> --}}
                     </div>
                     <!-- 📋 কার্ট আইটেম গ্রিড টেবিল (লাইভ জাভাস্ক্রিপ্ট অ্যাপেন্ড জোন) -->
                     <h6 class="fw-bold text-dark mb-3">📦 Cart Items</h6>
-                    <div class="table-responsive border rounded-3 bg-light" style="max-height: 280px; overflow-y: auto;">
+                    <div class="table-responsive border rounded-3 bg-light" style="max-height: 300px; overflow-y: auto;">
                         <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light text-secondary small fw-bold border-bottom">
+                            <thead class="table-light text-secondary small fw-bold border-bottom sticky-top">
                                 <tr>
                                     <th class="ps-3 py-3">Product Info</th>
                                     <th class="py-3" style="width: 120px;">Qty</th>
@@ -88,12 +117,13 @@
                                 </tr> --}}
                                 
                                 <!-- যদি কার্ট খালি থাকে তাহলে নিচের অংশটি দেখাবে -->
-                                {{-- <tr id="emptyCartRow">
+                                <tr id="emptyCartRow">
                                     <td colspan="5" class="text-center py-5 text-secondary">
                                         <span class="fs-2 d-block mb-1">🛒</span>
                                         Cart is empty. Search products to add.
                                     </td>
-                                </tr> --}}
+                                </tr>
+                                
                             </tbody>
                         </table>
                     </div>
@@ -181,18 +211,15 @@
 @push('script')
     <script>
         window.laravelAssetUrl = "{{ asset('storage/') }}/";
+        let cart = [];
         document.getElementById('product_search').addEventListener('input', async function(event) {
             let query = event.target.value.trim();
-
-             // পুরানো সাজেশন লিস্ট স্ক্রিন থেকে মুছে ফেলা (Reset)
             removeSearchDropdown();
             if (query.length < 2) return; // কমপক্ষে ২টি অক্ষর টাইপ করলে তবেই সার্চ শুরু হবে
             try {
-                // 🚀 এক্সিওস লাইভ গেট রিকোয়েস্ট
                 let response = await axios.get('/productssearching', {
                     params: { query: query }
                 });
-
                 if (response.status === 200 && response.data.status === true) {   
                     console.log("Live search response:");                 
                     let products = response.data.data;
@@ -203,14 +230,13 @@
             } catch (err) {
                 console.error("Live search failed:", err);
             }
-
             function renderSearchDropdown(products) {
                 let searchInput = document.getElementById('product_search');
                 let dropdown = document.createElement('ul');
                 dropdown.id = "live-search-results";
-                dropdown.className = "list-group position-relative w-100 shadow-lg rounded-3 mt-1";
+                dropdown.className = "mt-5 list-group position-absolute w-100 shadow-lg rounded-3 mt-1";
                 dropdown.style.zIndex = "1090";
-                dropdown.style.maxHeight = "250px";
+                dropdown.style.maxHeight = "300px";
                 dropdown.style.overflowY = "auto";
 
                 products.forEach(product => {
@@ -228,8 +254,7 @@
                         <span class="text-muted">${product.brand ? product.brand.name : 'No brand mensioned'}</span>
                         <span class="badge bg-purple text-dark fw-bold" style="font-size: 15px;">৳${parseFloat(product.product_price).toFixed(2)}</span>
                     </div>
-                    `;
-        
+                    `;        
                     li.onclick = function() {
                         addToCart(product);
                         searchInput.value = '';
@@ -237,44 +262,30 @@
                     };
                     dropdown.appendChild(li);
                 });
-
                 searchInput.parentNode.appendChild(dropdown);
             }
             
-            // 🎯 ১. গ্লোবাল কার্ট মেমোরি অ্যারে (প্রতিবার আইটেম যোগ করলে এখানে ডাটা জমা হবে)
-            let cart = [];
             function addToCart(product) {
                 let price = parseFloat(product.product_price || 0);
-                
-                // কার্ট অ্যারের ভেতর অলরেডি এই প্রোডাক্ট আইডিটি যোগ করা আছে কিনা তা খোঁজা
                 let existingItem = cart.find(item => item.id === product.id);
 
                 if (existingItem) {
-                    // শর্ত: প্রোডাক্ট অলরেডি কার্টে থাকলে শুধু কোয়ান্টিটি ১ পিস বাড়বে
                     existingItem.quantity += 1;
                 } else {
-                    // শর্ত: সম্পূর্ণ নতুন প্রোডাক্ট হলে কার্ট অ্যারেতে অবজেক্ট পুশ হবে
                     cart.push({
                         id: product.id,
-                        name: product.name || product.product_name,
+                        name: product.name,
+                        // name: product.name || product.product_name,
                         code: product.product_code,
                         price: price,
                         quantity: 1
                     });
                 }
-
-                // 🔄 কার্ট টেবিলের এইচটিএমএল ভিজ্যুয়াল এবং ডান পাশের হিসাব আপডেট করা
                 updateCartDOM();
             }
-
-            /**
-             * 🖼️ ৩. কার্ট অ্যারের ওপর ভিত্তি করে ব্লেড টেবিল রো (DOM) তৈরি করার লাইভ মেথড
-             */
             function updateCartDOM() {
                 let tableBody = document.getElementById('cartTableBody');
                 if (!tableBody) return;
-
-                // টেবিল বডি সম্পূর্ণ খালি করে নতুন করে লুপ চালানো (ডুপ্লিকেশন এড়াতে)
                 tableBody.innerHTML = '';
 
                 if (cart.length === 0) {
@@ -288,8 +299,6 @@
                     calculateBillingSummary();
                     return;
                 }
-
-                // কার্ট অ্যারের ওপর লুপ চালিয়ে প্রতিটা প্রোডাক্টের জন্য ডাইনামিক বুটস্ট্র্যাপ রো তৈরি
                 cart.forEach((item, index) => {
                     let itemTotal = item.price * item.quantity;
                     let tr = document.createElement('tr');
@@ -316,15 +325,13 @@
                     `;
                     tableBody.appendChild(tr);
                 });
-
-                // ডান পাশের বিলিং সামারি ক্যালকুলেট করা
                 calculateBillingSummary();
             }
 
             /**
              * ➕ ➖ ৪. প্লাস-মাইনাস বাটনে ক্লিক করলে কোয়ান্টিটি পরিবর্তন করার মেথড
              */
-            function changeQty(index, amount) {
+            window.changeQty = function(index, amount) {
                 if (cart[index]) {
                     cart[index].quantity += amount;
                     
@@ -340,7 +347,7 @@
             /**
              * 🗑️ ৫. ট্র্যাশ ক্যানে ক্লিক করলে সরাসরি কার্ট থেকে প্রোডাক্ট রিমুভ করার মেথড
              */
-            function removeItem(index) {
+            window.removeItem = function(index) {
                 cart.splice(index, 1);
                 toastr.warning("Item removed from cart");
                 updateCartDOM();
