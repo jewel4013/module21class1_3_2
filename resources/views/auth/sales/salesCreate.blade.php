@@ -4,7 +4,7 @@
     🛒 POS Sales Register
 @endsection
 @section('HeaderDown')
-    📅 Today: <span class="text-dark">'d M, Y'</span>
+    📅 Today: <span class="text-dark">{{ \Carbon\Carbon::now()->format('d M, Y') }}</span>
 @endsection
 
 @push('style')
@@ -40,7 +40,7 @@
                         <option value="" selected disabled>Search or Select Customer...</option>
                         <option value="walk-in">🚶 Walk-in Customer (General)</option>
                         @foreach($customers as $customer)
-                            <option value="{{ $customer->id }}">{{ $customer->name }} (📱 {{ $customer->phone }})</option>
+                            <option id="customer_id" value="{{ $customer->id }}">{{ $customer->name }} (📱 {{ $customer->phone }})</option>
                         @endforeach
                     </select>
                 </div>
@@ -143,7 +143,7 @@
                         <div class="d-flex align-items-center justify-content-between">
                             <span class="text-secondary fw-medium">Discount (৳)</span>
                             <input type="number" id="discount_input" class="form-control form-control-sm text-end border-light-subtle rounded-2 fw-bold text-danger" 
-                                value="0" style="max-width: 120px;">
+                                value="0" min="0" style="max-width: 120px;">
                         </div>
                         <hr class="text-muted my-1">
                         <div class="d-flex align-items-center justify-content-between">
@@ -169,10 +169,10 @@
                         <div class="col-12">
                             <label class="form-label fw-bold text-secondary">Payment Method</label>
                             <select id="payment_type" class="form-select border-light-subtle rounded-3 fw-semibold text-dark">
-                                <option value="Cash" selected>💵 Cash</option>
-                                <option value="bKash">📱 bKash</option>
-                                <option value="Nagad">📱 Nagad</option>
-                                <option value="Card">💳 Card Payment</option>
+                                <option value="cash" selected>💵 Cash</option>
+                                <option value="bkash" disabled>📱 bKash</option>
+                                <option value="nagad" disabled>📱 Nagad</option>
+                                <option value="card" disabled>💳 Card Payment</option>
                             </select>
                         </div>
                     </div>
@@ -372,6 +372,7 @@
                 // ব্লেডের ডান পাশের স্প্যানগুলোতে মান পুশ করা
                 document.getElementById('summary_sub_total').innerText = '৳' + subTotal.toFixed(2);
                 document.getElementById('summary_grand_total').innerText = '৳' + grandTotal.toFixed(2);
+                document.getElementById('paid_amount').value = '৳' + grandTotal.toFixed(2);
                 
                 // অটোমেটিক পেইড অ্যামাউন্ট ফিল্ডে গ্র্যান্ড টোটালের মান অ্যাসাইন করা (POS স্পিড ইউএক্স ট্রিকস)
                 let paidInput = document.getElementById('paid_amount');
@@ -427,7 +428,66 @@
             });
 
 
-
         });
+
+//============================================================================================================================================================== -->
+                    // sales sasving
+//============================================================================================================================================================== -->
+        async function handleCompleteSale() {
+            let customer_id = document.getElementById('customer_id').value;
+            let sub_total = document.getElementById('summary_sub_total').innerText.replace('৳', '').replace(/,/g, '');
+            let discount = parseFloat(document.getElementById('discount_input').value) || 0;
+            let grand_total = parseFloat(document.getElementById('summary_grand_total').innerText.replace('৳', '').replace(/,/g, '')) || 0;
+            let paid_amount = parseFloat(document.getElementById('paid_amount').value) || 0;
+            let due_amount = grand_total - paid_amount;
+            let payment_type = document.getElementById('payment_type').value;
+            
+            try {
+                let response = await axios.post('/sales/store',{                    
+                    customer_id: customer_id,
+                    sub_total: sub_total,
+                    discount: discount,
+                    grand_total: grand_total,
+                    paid_amount: paid_amount,
+                    due_amount: due_amount,
+                    payment_type: payment_type,
+                    cart: cart
+                    
+                });
+                if (response.status === 201 && response.data.status === true) {
+                    toastr.success(response.data.message);
+                    setTimeout(function() {
+                        window.location.href = '/sales';
+                    }, 1000);
+                } else if (response.response.status === 422) {
+                    let errors = response.response.data.errors;
+                    for (let field in errors) {
+                        if (errors.hasOwnProperty(field)) {
+                            toastr.error(errors[field][0]);
+                        }
+                        
+                    }
+                } else {
+                    console.log(response.data);
+                    toastr.error("Some error.");
+                }
+            } catch (err) {
+                if (err.response) {
+                    let errors = err.response.data.errors;
+                    if (Array.isArray(errors)) {
+                        errors.forEach(msg => toastr.error(msg));
+                    } else {
+                        for (let field in errors) {
+                            if (errors.hasOwnProperty(field)) {
+                                toastr.error(errors[field][0]);
+                            }
+                        }
+                    }
+                } else {
+                    toastr.error("Something went wrong. Please try again.");
+                }
+            }
+                
+        }
     </script>
 @endpush

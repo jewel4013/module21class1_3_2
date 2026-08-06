@@ -115,6 +115,8 @@ Route::middleware(['jwtauth'])->group( function(){
         Route::post('/sales/{sale}/update', [SaleController::class, 'update'])->name('saleUpdate');
         Route::delete('/sales/{sale}/delete', [SaleController::class, 'destroy'])->name('saleDestroy');
         Route::get('/productssearching', [SaleController::class, 'searchProducts'])->name('searchProducts');
+        Route::get('/sales/invoice/{invoice_no}', [SaleController::class, 'showInvoice'])->name('invoiceShow');
+
 
         Route::get('/sales/invoice/{sale}', [SaleController::class, 'invoice'])->name('invoiceShow');
     }); 

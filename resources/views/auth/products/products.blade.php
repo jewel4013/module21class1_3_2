@@ -64,7 +64,7 @@
                     <th>Product</th>
                     <th>Image</th>
                     <th>Desctiption</th>                    
-                    <th>Number of Product</th>
+                    <th>Product Stock</th>
                     <th>Category</th>
                     <th>Brand</th>
                     <th>Show Home</th>
@@ -93,7 +93,7 @@
                             </div>
                         </td>
                         <td>{{ Str::limit($product->description, 80)}}</td>
-                        <td>150</td>
+                        <td>{{ $product->stock_quantity }}</td>
                         <td>{{$product->catagory->name}}</td>
                         <td>{{$product->brand?->name ?? '-'}}</td>
                         <td><span class="text-success">{{$product->show_home ? 'yes' : '-'}}</span></td>

@@ -6,7 +6,7 @@
                 <ul class="sidebar-menu">
                     <span id="adminNavbar" style="display: none">
                         <li class="sidebar-item {{ set_active('/') }}"><a href="/"><span>📊</span> <span class="ms-2">Dashboard</span></a></li>
-                        <li class="sidebar-item {{ Request::is('sales') ?  'active' : '' }}"><a href="/sales"><span>💰</span> <span class="ms-2">Sales</span></a></li>
+                        <li class="sidebar-item {{ set_active(['sales', 'sales/*']) }}"><a href="/sales"><span>💰</span> <span class="ms-2">Sales</span></a></li>
                         <li class="sidebar-item {{ set_active(['catagories', 'catagories/create']) }}"><a href="/catagories"><span>📇</span> <span class="ms-2">Catagory</span></a></li>
                         <li class="sidebar-item {{ set_active(['products', 'products/*', 'brands', 'brands/*',]) }}"><a href="/products"><span>🛍️</span> <span class="ms-2">Products</span></a></li>
                         <li class="sidebar-item {{ set_active(['customers','customers/*']) }}"><a href="/customers"><span>👥</span> <span class="ms-2">Customers</span></a></li>

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 #[Fillable([
         'name', 'slug', 'product_code', 'brand_id', 'category_id', 'priority', 
         'image', 'product_cost', 'product_price', 'multiple_images', 
-        'description', 'status', 'is_popular', 'show_home', 'show_menu'
+        'description', 'status', 'is_popular', 'show_home', 'show_menu', 'stock_quantity'
     ])]    
 class Product extends Model
 {

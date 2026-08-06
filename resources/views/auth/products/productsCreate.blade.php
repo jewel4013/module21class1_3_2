@@ -99,32 +99,36 @@
             </div>
 
             <!-- ১১. ৩টি নিচের কন্ডিশনাল চেকবক্স প্যানেল -->
-            <div class="col-12 col-md-12 col-lg-4 d-flex justify-content-between">
-                
-                <!-- চেকবক্স ১: Variant -->
-                <div class="form-check">
-                    <input class="form-check-input border-secondary-subtle" type="checkbox" id="is_popular">
-                    <label class="form-check-label" for="is_popular">
-                        Is popular
-                    </label>
-                </div>
+            <div class="d-flex row mt-2 align-items-center justify-content-between">
+                <div class="col-12 col-md-12 col-lg-4 d-flex justify-content-between">                
+                    <!-- চেকবক্স ১: Variant -->
+                    <div class="form-check">
+                        <input class="form-check-input border-secondary-subtle" type="checkbox" id="is_popular">
+                        <label class="form-check-label" for="is_popular">
+                            Is popular
+                        </label>
+                    </div>
 
-                <!-- চেকবক্স ২: Promotional Price -->
-                <div class="form-check">
-                    <input class="form-check-input border-secondary-subtle" type="checkbox" id="show_home">
-                    <label class="form-check-label" for="show_home">
-                        Show Home
-                    </label>
-                </div>
+                    <!-- চেকবক্স ২: Promotional Price -->
+                    <div class="form-check">
+                        <input class="form-check-input border-secondary-subtle" type="checkbox" id="show_home">
+                        <label class="form-check-label" for="show_home">
+                            Show Home
+                        </label>
+                    </div>
 
-                <!-- চেকবক্স ৩: SEO Option -->
-                <div class="form-check">
-                    <input class="form-check-input border-secondary-subtle" type="checkbox" id="show_menu">
-                    <label class="form-check-label" for="show_menu">
-                        Show Menu
-                    </label>
+                    <!-- চেকবক্স ৩: SEO Option -->
+                    <div class="form-check">
+                        <input class="form-check-input border-secondary-subtle" type="checkbox" id="show_menu">
+                        <label class="form-check-label" for="show_menu">
+                            Show Menu
+                        </label>
+                    </div>                
                 </div>
-                
+                <div class="col-12 col-md-12 col-lg-4">
+                    <label class="form-label fw-semibold text-secondary" for="stock_quantity">Stock Quantity</label>
+                    <input type="number" id="stock_quantity" class="form-control form-control-sm border-light-subtle rounded-2" required placeholder="Enter stock quantity">
+                </div>
             </div>
 
             <!-- ১২. সাবমিট বোতাম প্যানেল -->
@@ -164,16 +168,16 @@
             let is_popular = document.getElementById('is_popular').checked ? 1 : 0;
             let show_home = document.getElementById('show_home').checked ? 1 : 0;
             let show_menu = document.getElementById('show_menu').checked ? 1 : 0;
-
-
-            
+            let stock_quantity = document.getElementById('stock_quantity').value;
             if(name.length === 0){
                 toastr.error("Name field is required!");
             }else if(category_id.length === 0){
                 toastr.error("Category field is required!");
             }else if(product_price.length === 0){
                 toastr.error("Product Price field is required!");
-            } 
+            }else if(stock_quantity.length === 0){
+                toastr.error("Stock Quantity field is required!");  
+            }
             else{
                 let formData = new FormData();
                 formData.append('name', name);
@@ -186,6 +190,7 @@
                 formData.append('is_popular', is_popular);
                 formData.append('show_home', show_home);
                 formData.append('show_menu', show_menu);
+                formData.append('stock_quantity', stock_quantity);
                 if(image) {
                     formData.append('image', image);
                 }

@@ -35,11 +35,12 @@ class ProdictCreatRequest extends FormRequest
             // এটি লারাভেল Herd কে বাধ্য করবে পিএইচপি মেমোরিতে ফাইলটির ওনারশিপ প্রপার্টি সবসময় সচল রাখতে!
             'image'             => 'required|file|image|mimes:jpeg,png,jpg,svg|max:1024',
             'multiple_images'   => 'nullable|array',
-            'multiple_images.*' => 'file|image|mimes:jpeg,png,jpg,svg|max:1024',
+            'multiple_images.*' => 'file|image|mimes:jpeg,png,jpg,svg|max:4096',
             'description' => 'nullable|string|max:5000',
             'is_popular' => 'nullable|boolean',
             'show_home' => 'nullable|boolean',
             'show_menu' => 'nullable|boolean',
+            'stock_quantity' => 'required|integer|min:1',
         ];
     }
 

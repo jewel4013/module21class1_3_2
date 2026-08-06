@@ -132,8 +132,10 @@ class ProductController extends Controller
                     File::delete(public_path($product->image));
                 }
 
-                $path = $request->file('image')->store('images/products', 'public');
-                $validated['image'] = $path;
+               $imageFile = $request->file('image');
+                $imageName = time() . '_main.' . $imageFile->getClientOriginalExtension();
+                $imageFile->move(storage_path('app/public/images/products'), $imageName);
+                $validated['image'] = 'images/products/' . $imageName;
             } else {
                 // যদি ইউজার নতুন ছবি না দেয়, তবে ডাটাবেজে যা আছে সেটাই বহাল থাকবে
                 $validated['image'] = $product->image;
@@ -153,8 +155,9 @@ class ProductController extends Controller
                 // নতুন ছবিগুলো আপলোড করা
                 $imageArray = [];
                 foreach($request->file('multiple_images') as $image){
-                    $path = $image->store('images/products', 'public');
-                    $imageArray[] = $path;
+                    $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                    $image->move(storage_path('app/public/images/products/gallery'), $imageName);
+                    $imageArray[] = 'images/products/gallery/' . $imageName;
                 }
                 $validated['multiple_images'] = $imageArray;    
             } else {

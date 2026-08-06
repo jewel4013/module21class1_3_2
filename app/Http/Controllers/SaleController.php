@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SaleStoreRequest;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Sale;
+use App\Models\SaleDetaills;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SaleController extends Controller
@@ -20,9 +24,50 @@ class SaleController extends Controller
         $customers = Customer::all();
         return view('auth.sales.salesCreate', compact('products', 'customers'));
     }
-    public function store(){
+
+    public function store(SaleStoreRequest $request){
         
+        // ২. সার্চ এবং বারকোড স্ক্যান এরিয়া
+        $validated = $request->validated();
+        $cartItems = $request->input('cart');
+        DB::beginTransaction();
+        try {
+            // 🎯 নাম থেকে স্লাগ তৈরি করা এবং স্ট্যাটাস লক করা
+            $validated['user_id'] = Auth::id();
+            $validated['sale_date'] = date('Y-m-d H:i:s');
+            
+            $sale = Sale::create($validated); 
+            $saleDetail = [];
+            foreach($cartItems as $item){
+                $totalPrice = $item['price'] * $item['quantity'];
+                $saleDetail = [
+                    'sale_id' => $sale->id,
+                    'product_id' => $item['id'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['price'],
+                    'total_price' => $totalPrice,
+                ];
+                SaleDetaills::create($saleDetail);
+            }
+            DB::commit();
+            return response()->json([
+                'status' => true,
+                'message' => 'Sale created successfully',
+            ], 201);    
+        }catch(\Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => 'Something went wrong, please try again',
+            ], 500);
+        }    
     }
+    public function showInvoice($invoice_no){
+       // 🎯 Eager Loading রিলেশনশিপ চেইন: এক ক্লিকে কাস্টমার এবং প্রোডাক্টের ডাটা তুলুন
+        $sale = Sale::with(['saleDetaills.product', 'customer'])->where('invoice_no', $invoice_no)->firstOrFail();    
+        return view('auth.sales.invoice', compact('sale'));
+    }
+
     public function show(){
         
     }

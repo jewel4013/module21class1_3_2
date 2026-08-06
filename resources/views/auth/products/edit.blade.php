@@ -101,25 +101,36 @@
             </div>
 
             <!-- ⚙️ ১০. জাভাস্ক্রিপ্ট ফ্রেন্ডলি ৩টি চেকবক্স (লারাভেলের কন্ডিশনে টিক মার্ক বসবে) -->
-            <div class="col-12 mt-4 d-flex justify-content-start gap-2 fw-semibold text-dark">
-                
-                <!-- চেকবক্স ১: is_popular -->
-                <div class="form-check">
-                    <!-- 🎯 ট্রিকস: ডাটাবেজে ১ থাকলে ব্লেড থেকে অটোমেটিক 'checked' হয়ে যাবে -->
-                    <input class="form-check-input" type="checkbox" id="is_popular" {{ $product->is_popular == 1 ? 'checked' : '' }}>
-                    <label class="form-check-label" for="is_popular">Popular Category</label>
-                </div>
+            <div class="d-flex row mt-2 align-items-center justify-content-between">
+                <div class="col-12 col-md-12 col-lg-4 d-flex justify-content-between">                
+                    <!-- চেকবক্স ১: Variant -->
+                    <div class="form-check">
+                        <input class="form-check-input border-secondary-subtle" type="checkbox" id="is_popular" {{ $product->is_popular == 1 ? 'checked' : '' }}>
+                        <label class="form-check-label" for="is_popular" >
+                            Is popular
+                        </label>
+                    </div>
 
-                <!-- চেকবক্স ২: show_home -->
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="show_home" {{ $product->show_home == 1 ? 'checked' : '' }}>
-                    <label class="form-check-label" for="show_home">Show Home</label>
-                </div>
+                    <!-- চেকবক্স ২: Promotional Price -->
+                    <div class="form-check">
+                        <input class="form-check-input border-secondary-subtle" type="checkbox" id="show_home" {{ $product->show_home == 1 ? 'checked' : '' }}>
+                        <label class="form-check-label" for="show_home" >
+                            Show Home
+                        </label>
+                    </div>
 
-                <!-- চেকবক্স ৩: show_menu -->
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="show_menu" {{ $product->show_menu == 1 ? 'checked' : '' }}>
-                    <label class="form-check-label" for="show_menu">Show Menu</label>
+                    <!-- চেকবক্স ৩: SEO Option -->
+                    <div class="form-check">
+                        <input class="form-check-input border-secondary-subtle" type="checkbox" id="show_menu" {{ $product->show_menu == 1 ? 'checked' : '' }}>
+                        <label class="form-check-label" for="show_menu" >
+                            Show Menu
+                        </label>
+                    </div>                
+                </div>
+                <div class="col-12 col-md-12 col-lg-4 justify-content-start">
+                    <label class="form-label fw-semibold text-secondary" for="stock_quantity">Stock Quantity</label>
+                    <input type="number" id="stock_quantity" class="form-control form-control-sm border-light-subtle rounded-2" required 
+                        placeholder="Enter stock quantity" value="{{$product->stock_quantity}}">
                 </div>
             </div>
 
@@ -162,6 +173,7 @@
             let is_popular = document.getElementById('is_popular').checked ? 1 : 0;
             let show_home = document.getElementById('show_home').checked ? 1 : 0;
             let show_menu = document.getElementById('show_menu').checked ? 1 : 0;
+            let stock_quantity = document.getElementById('stock_quantity').value;
 
 
             
@@ -184,6 +196,7 @@
                 formData.append('is_popular', is_popular);
                 formData.append('show_home', show_home);
                 formData.append('show_menu', show_menu);
+                formData.append('stock_quantity', stock_quantity);
 
                 if(image) {
                     formData.append('image', image);

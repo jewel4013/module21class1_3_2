@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('customer_id')->nullable()->constrained('customers')->onDelete('set null');
             $table->string('invoice_no')->unique(); 
-            $table->date('sale_date');
+            $table->timestamp('sale_date');
             $table->decimal('sub_total', 10, 2)->default(0.00);
             $table->decimal('discount', 10, 2)->default(0.00);
             $table->decimal('grand_total', 10, 2)->default(0.00);
