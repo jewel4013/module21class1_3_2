@@ -57,27 +57,41 @@
                             <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between cursor-pointer p-2">
                                 <div class="d-flex align-items-center gap-2">
                                     <img src="${window.laravelAssetUrl}${product.image}" class="rounded border" style="width: 32px; height: 32px; object-fit: cover;">
-                                <div>
-                                        <strong class="text-dark d-block">${product.name}</strong>
-                                        <small class="text-muted">Code: ${product.product_code}</small>
+                                    <div>
+                                        <strong class="text-dark d-block">Soyabin</strong>
+                                        <small class="text-muted">Code: Swo-000001</small>
                                     </div>
                                 </div>
+                                <div class="align-item-center text-danger">
+                                    <div class="">
+                                        <span class="text-muted">Stock-</span>
+                                        <span class="text-dark fw-bold" style="font-size: 12px;">20</span>
+                                    </div>
+                                    <span class="btn btn-warning btn-sm fw-bold text-danger d-none" style="font-size: 10px;">Out of Stock</span>
+                                </div>
                                 <div class="align-items-center gap-2">
-                                    <span class="text-muted">${product.brand ? product.brand.name : 'No brand mensioned'}</span>
-                                    <span class="badge bg-purple text-dark fw-bold" style="font-size: 15px;">৳${parseFloat(product.product_price).toFixed(2)}</span>
+                                    <span class="text-muted">Brand</span>
+                                    <span class="badge bg-purple text-dark fw-bold" style="font-size: 15px;">৳110</span>
                                 </div>
                             </li>
                              <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between cursor-pointer p-2">
                                 <div class="d-flex align-items-center gap-2">
                                     <img src="${window.laravelAssetUrl}${product.image}" class="rounded border" style="width: 32px; height: 32px; object-fit: cover;">
                                 <div>
-                                        <strong class="text-dark d-block">${product.name}</strong>
-                                        <small class="text-muted">Code: ${product.product_code}</small>
+                                        <strong class="text-dark d-block">Miniket</strong>
+                                        <small class="text-muted">Code: Swo-000001</small>
                                     </div>
                                 </div>
+                                <div class="align-item-center text-danger">
+                                    <div class="">
+                                        <span class="text-muted">Stock-</span>
+                                        <span class="text-dark fw-bold" style="font-size: 12px;">120</span>
+                                    </div>
+                                    <span class="btn btn-warning btn-sm fw-bold text-danger d-none" style="font-size: 10px;">Out of Stock</span>
+                                </div>
                                 <div class="align-items-center gap-2">
-                                    <span class="text-muted">${product.brand ? product.brand.name : 'No brand mensioned'}</span>
-                                    <span class="badge bg-purple text-dark fw-bold" style="font-size: 15px;">৳${parseFloat(product.product_price).toFixed(2)}</span>
+                                    <span class="text-muted">Brand</span>
+                                    <span class="badge bg-purple text-dark fw-bold" style="font-size: 15px;">৳250</span>
                                 </div>
                             </li>
                         </ul> --}}
@@ -138,7 +152,7 @@
                     <div class="d-flex flex-column gap-3 mb-4 bg-light p-3 rounded-4 border">
                         <div class="d-flex align-items-center justify-content-between">
                             <span class="text-secondary fw-medium">Sub Total</span>
-                            <span id="summary_sub_total" class="fw-bold text-dark">৳১,৫০,০০০.০০</span>
+                            <span id="summary_sub_total" class="fw-bold text-dark">৳০,০০,০০০.০০</span>
                         </div>
                         <div class="d-flex align-items-center justify-content-between">
                             <span class="text-secondary fw-medium">Discount (৳)</span>
@@ -148,7 +162,7 @@
                         <hr class="text-muted my-1">
                         <div class="d-flex align-items-center justify-content-between">
                             <span class="text-dark fw-bold fs-6">Grand Total</span>
-                            <span id="summary_grand_total" class="fw-bold text-purple fs-5">৳১,৫০,০০০.০০</span>
+                            <span id="summary_grand_total" class="fw-bold text-purple fs-5">৳০,০০,০০০.০০</span>
                         </div>
                     </div>
 
@@ -205,6 +219,9 @@
         /* কাস্টম স্ক্রোলবার ফিক্স */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .is-stock-out { 
+            background-color: #ffebee !important;
+         }
     </style>
 @endpush
 
@@ -215,7 +232,7 @@
         document.getElementById('product_search').addEventListener('input', async function(event) {
             let query = event.target.value.trim();
             removeSearchDropdown();
-            if (query.length < 2) return; // কমপক্ষে ২টি অক্ষর টাইপ করলে তবেই সার্চ শুরু হবে
+            if (query.length < 1) return; // কমপক্ষে ২টি অক্ষর টাইপ করলে তবেই সার্চ শুরু হবে
             try {
                 let response = await axios.get('/productssearching', {
                     params: { query: query }
@@ -241,7 +258,7 @@
 
                 products.forEach(product => {
                     let li = document.createElement('li');
-                    li.className = "list-group-item list-group-item-action d-flex align-items-center justify-content-between cursor-pointer p-2";
+                    li.className = `list-group-item list-group-item-action d-flex align-items-center justify-content-between cursor-pointer p-2 ${product.stock_quantity <= 0 ? 'is-stock-out' : ''}`;
                     li.innerHTML = `
                     <div class="d-flex align-items-center gap-2">
                         <img src="${window.laravelAssetUrl}${product.image}" class="rounded border" style="width: 32px; height: 32px; object-fit: cover;">
@@ -250,12 +267,24 @@
                             <small class="text-muted">Code: ${product.product_code}</small>
                         </div>
                     </div>
+                    <div class="align-item-center text-danger">
+                        <div id="stock_massage" class="${product.stock_quantity <= 0 ? 'd-none' : ''}">
+                            <span class="text-muted">Stock-</span>
+                            <span class="text-dark fw-bold" style="font-size: 12px;">${product.stock_quantity}</span>
+                        </div>
+                        <span class="btn btn-warning btn-sm fw-bold text-danger ${product.stock_quantity > 0 ? 'd-none' : ''}" style="font-size: 10px;">OOS</span>
+                    </div>
                     <div class="align-items-center gap-2">
                         <span class="text-muted">${product.brand ? product.brand.name : 'No brand mensioned'}</span>
                         <span class="badge bg-purple text-dark fw-bold" style="font-size: 15px;">৳${parseFloat(product.product_price).toFixed(2)}</span>
                     </div>
                     `;        
-                    li.onclick = function() {
+                    li.onclick = function(e) {
+                        e.stopPropagation(); 
+                        if (this.classList.contains('is-stock-out')) {
+                            toastr.warning("Product Out of Sotck");                             
+                            return;
+                        }
                         addToCart(product);
                         searchInput.value = '';
                         removeSearchDropdown();
@@ -265,7 +294,7 @@
                 searchInput.parentNode.appendChild(dropdown);
             }
             
-            function addToCart(product) {
+            function addToCart(product) {                
                 let price = parseFloat(product.product_price || 0);
                 let existingItem = cart.find(item => item.id === product.id);
 
@@ -278,7 +307,8 @@
                         // name: product.name || product.product_name,
                         code: product.product_code,
                         price: price,
-                        quantity: 1
+                        quantity: 1,
+                        maxStock: product.stock_quantity
                     });
                 }
                 updateCartDOM();
@@ -333,6 +363,10 @@
              */
             window.changeQty = function(index, amount) {
                 if (cart[index]) {
+                    if (cart[index].maxStock < cart[index].quantity + amount) {
+                        toastr.warning("Product max stock is only: "+ cart[index].maxStock+ ". You can not add more than that.");
+                        return;
+                    }
                     cart[index].quantity += amount;
                     
                     // সেফটি গার্ড: কোয়ান্টিটি ১ এর নিচে নামলে আইটেমটি কার্ট থেকে ডিলিট হয়ে যাবে

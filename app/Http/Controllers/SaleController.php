@@ -48,6 +48,7 @@ class SaleController extends Controller
                     'total_price' => $totalPrice,
                 ];
                 SaleDetaills::create($saleDetail);
+                Product::where('id', $item['id'])->decrement('stock_quantity', $item['quantity']);
             }
             DB::commit();
             return response()->json([
@@ -88,7 +89,7 @@ class SaleController extends Controller
             $search = $request->input('query');
             // 🎯 আপনার মাইগ্রেশন অনুযায়ী 'name' এবং 'product_code' কলাম নিখুঁতভাবে লক করা হলো
              $products = Product::with('brand') // 🚀 ব্র্যান্ড রিলেশন লোড করা হলো
-            ->select('id', 'name', 'product_code', 'product_price', 'image', 'brand_id')
+            ->select('id', 'name', 'product_code', 'product_price', 'image', 'brand_id', 'stock_quantity')
             ->where(function($query) use ($search) {
                 $query->where('slug', 'LIKE', '%' . $search . '%')
                     ->orWhere('product_code', 'LIKE', '%' . $search . '%');
