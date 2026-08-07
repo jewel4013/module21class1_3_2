@@ -37,7 +37,7 @@
             <div class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" role="tab" aria-controls="profile" aria-selected="false">                
                 <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-4 border-info">
                     <span class="text-muted d-block small fw-bold text-uppercase">Today's Sale</span>
-                    <span class="fs-3 fw-bold text-info mt-1">৳{{ number_format($todaySales ?? 0, 2) }}</span>
+                    <span class="fs-3 fw-bold text-info mt-1">৳{{ number_format($todaySales->sum('grand_total'), 2) }}</span>
                     <small class="text-secondary" style="font-size: 11px;">※ Real-time calculations</small>
                 </div>
             </div>          
@@ -46,7 +46,7 @@
             <div class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" role="tab" aria-controls="contact" aria-selected="false">                
                 <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-4 border-primary">
                     <span class="text-muted d-block small fw-bold text-uppercase">Month Sale</span>
-                    <span class="fs-3 fw-bold text-primary mt-1">৳{{ number_format($todaySales ?? 0, 2) }}</span>
+                    <span class="fs-3 fw-bold text-primary mt-1">৳{{ number_format($lastMonthSales->sum('grand_total'), 2) }}</span>
                     <small class="text-secondary" style="font-size: 11px;">※ Real-time calculations</small>
                 </div>
             </div>          
@@ -55,7 +55,7 @@
             <div class="nav-link" id="contact2-tab" data-bs-toggle="tab" data-bs-target="#contact2" role="tab" aria-controls="contact2" aria-selected="false">                
                 <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-4 border-warning">
                     <span class="text-muted d-block small fw-bold text-uppercase">Year's Sale</span>
-                    <span class="fs-3 fw-bold text-warning mt-1">৳{{ number_format($todaySales ?? 0, 2) }}</span>
+                    <span class="fs-3 fw-bold text-warning mt-1">৳{{ number_format($lastYearSales->sum('grand_total'), 2) }}</span>
                     <small class="text-secondary" style="font-size: 11px;">※ Real-time calculations</small>
                 </div>
             </div>          
@@ -69,10 +69,17 @@
                 <div class="d-flex align-items-center justify-content-between mb-4">
                     <h5 class="fw-bold text-dark m-0">📜 Recent Sales History</h5>
                     <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-2 px-2 py-1 smallfw-semibold">Total Orders: {{ count($sales) }}</span>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-danger" title="Copy">📋</button>
+                        <button class="btn btn-secondary" title="CSV">📄</button>
+                        <button class="btn btn-warning text-white" title="Excel">📊</button>
+                        <button class="btn btn-info text-white" title="PDF">📕</button>
+                        <button class="btn btn-primary" title="Print" onclick="printDiv()">🖨️</button>
+                    </div>
                 </div>
 
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle border-light-subtle" style="font-size: 13px;">
+                    <table class="table table-hover align-middle border-light-subtle" style="font-size: 13px;" id="printArea">
                         <thead class="table-light text-secondary fw-semibold border-bottom">
                             <tr>
                                 <th class="py-3">Invoice No</th>
@@ -169,7 +176,7 @@
                             </tr>
                         </thead>
                         <tbody class="border-0">
-                            @forelse($sales as $sale)
+                            @forelse($todaySales as $sale)
                                 <tr class="border-bottom border-light-subtle">
                                     <!-- ইনভয়েস নাম্বার -->
                                     <td class="fw-bold text-dark">{{ $sale->invoice_no }}</td>
@@ -252,7 +259,7 @@
                             </tr>
                         </thead>
                         <tbody class="border-0">
-                            @forelse($sales as $sale)
+                            @forelse($lastMonthSales as $sale)
                                 <tr class="border-bottom border-light-subtle">
                                     <!-- ইনভয়েস নাম্বার -->
                                     <td class="fw-bold text-dark">{{ $sale->invoice_no }}</td>
@@ -335,7 +342,7 @@
                             </tr>
                         </thead>
                         <tbody class="border-0">
-                            @forelse($sales as $sale)
+                            @forelse($lastYearSales as $sale)
                                 <tr class="border-bottom border-light-subtle">
                                     <!-- ইনভয়েস নাম্বার -->
                                     <td class="fw-bold text-dark">{{ $sale->invoice_no }}</td>
@@ -412,13 +419,45 @@
         .nav-link .card{
             cursor: pointer;
         }
+
+        @media print {
+            /* ১. পুরো পেজের সব কিছু লুকিয়ে ফেলা */
+            body * {
+                visibility: hidden;
+            }
+            /* ২. শুধুমাত্র নির্দিষ্ট প্রিন্ট এরিয়া এবং তার ভেতরের কন্টেন্ট দেখানো */
+            #printArea, #printArea * {
+                visibility: visible;
+            }
+            /* ৩. প্রিন্ট এরিয়াকে পেজের একদম ওপর থেকে শুরু করা */
+            #printArea {
+                position: absolute;
+                margin-top: -100px
+                left: 0 !important;
+                top: 0 !important;
+                width: 100%;
+                border: none !important; /* বর্ডার সুন্দর না লাগলে বাদ দেওয়া */
+                padding: 0 !important;
+            }
+            /* ৪. প্রিন্ট পেজে ব্যাকগ্রাউন্ড কালার ও টেক্সট কালার ঠিক রাখা */
+            body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            /* ৫. প্রিন্ট করার সময় বাটন গ্রুপ হাইড করা (যদি প্রিন্ট এরিয়ার ভেতরে থাকে) */
+            .btn-group, .no-print {
+                display: none !important;
+            }
+        }
     </style>
 @endpush
 
 
 @push('script')
     <script>
-        
+        function printDiv() {
+            window.print();
+        }
         
     </script>
 @endpush

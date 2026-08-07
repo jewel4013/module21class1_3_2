@@ -9,6 +9,7 @@ use App\Models\Sale;
 use App\Models\SaleDetaills;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -16,7 +17,17 @@ class SaleController extends Controller
 {
     public function index(){
         $sales = Sale::all();
-        return view('auth.sales.sales', compact('sales'));
+        $todaySales = Sale::wheredate('sale_date', Carbon::now())->get();
+        $lastMonthSales = Sale::whereBetween('sale_date',[
+            Carbon::now()->subMonth()->startOfMonth(),
+            Carbon::now()->subMonth()->endOfMonth()
+         ])->get();
+         $lastYearSales = Sale::whereBetween('sale_date',[
+            Carbon::now()->subYear()->startOfYear(),
+            Carbon::now()->subYear()->endOfYear()
+         ])->get();
+        
+        return view('auth.sales.sales', compact(['sales', 'todaySales', 'lastMonthSales', 'lastYearSales']));
     }
 
     public function create(){

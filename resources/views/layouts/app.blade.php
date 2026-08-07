@@ -77,7 +77,7 @@
             <main class="content-area"> 
                 <!-- কন্টেন্ট হেডার ও ইউজার প্রোফাইল বার -->
                 <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-10 sticky-top">
-                    <div>
+                    <div class="">
                         <h3 class="fw-bold text-dark mb-1">
                             @yield('PageHeader')
                         </h3>
