@@ -4,3 +4,19 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js" integrity="sha512-yNbKY1y6hXLM4yLu5SLn2+l+Qaz2tO+7Z+j+0ELFl9p1z9+06fTma6j8T7RwOXf/uSJUT82/hwkIROY/3aNvzUg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.18.1/axios.min.js" integrity="sha512-l1tCs7ua0mpVzhqYBRTbxh05c4bT7cu1Ma5vSpcwT9yP75wEkbGhwIe1kxmowZRVXxwjTMCbogc3A7y4SUfT7w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+
+
+
+Installed Packeges:
+1. Bootstrap
+2. Toastr 
+3. Axios
+4. jQuery
+5. Pdf composer require barryvdh/laravel-dompdf
+    (যদি আপনার config ফোল্ডারে dompdf.php ফাইলটি না থাকে, 
+    তবে টার্মিনালে 
+    php artisan vendor:publish --provider="Barryvdh\DomPDF\ServiceProvider" 
+    কমান্ডটি রান করে ফাইলটি নিয়ে আসতে পারেন)।
+    enable_font_subsetting => true

@@ -10,10 +10,8 @@ class dashboardController extends Controller
 {
     public function index(){
         $todaySales = Sale::wheredate('sale_date', Carbon::now())->get();
-        $lastMonthSales = Sale::whereBetween('sale_date',[
-            Carbon::now()->subMonth()->startOfMonth(),
-            Carbon::now()->subMonth()->endOfMonth()
-         ])->get();
-        return view('welcome', compact(['todaySales', 'lastMonthSales']));
+        $thiMonthSales = Sale::whereMonth('sale_date', Carbon::now()->month)->get();
+        $thisYearSales = Sale::whereYear('sale_date', Carbon::now()->year)->get();
+        return view('welcome', compact(['todaySales', 'thiMonthSales', 'thisYearSales']));
     }
 }

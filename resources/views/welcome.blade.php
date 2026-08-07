@@ -17,7 +17,13 @@
         <div class="col-12 col-sm-6 col-xl-4">
             <div class="card border-0 shadow-sm p-4 bg-white border-start border-primary border-4 rounded-3">
                 <span class="text-muted small text-uppercase fw-bold d-block mb-1">This Month Sales</span>
-                <h2 class="fw-extrabold text-primary mb-0">৳{{ number_format($lastMonthSales->sum('grand_total'), 2) }}</h2>
+                <h2 class="fw-extrabold text-primary mb-0">৳{{ number_format($thiMonthSales->sum('grand_total'), 2) }}</h2>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card border-0 shadow-sm p-4 bg-white border-start border-info border-4 rounded-3">
+                <span class="text-muted small text-uppercase fw-bold d-block mb-1">This Year Sales</span>
+                <h2 class="fw-extrabold text-info mb-0">৳{{ number_format($thisYearSales->sum('grand_total'), 2) }}</h2>
             </div>
         </div>
         

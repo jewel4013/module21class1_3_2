@@ -5,6 +5,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CatagoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\dashboardController;
+use App\Http\Controllers\PdfController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SaleController;
@@ -119,6 +120,10 @@ Route::middleware(['jwtauth'])->group( function(){
 
 
         Route::get('/sales/invoice/{sale}', [SaleController::class, 'invoice'])->name('invoiceShow');
+
+
+        //pdf section
+        Route::get('/allsales/pdf', [PdfController::class, 'allSales'])->name('allSales');
     }); 
 });
     

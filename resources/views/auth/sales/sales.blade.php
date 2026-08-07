@@ -74,12 +74,12 @@
                         <button class="btn btn-secondary" title="CSV">📄</button>
                         <button class="btn btn-warning text-white" title="Excel">📊</button>
                         <button class="btn btn-info text-white" title="PDF">📕</button>
-                        <button class="btn btn-primary" title="Print" onclick="printDiv()">🖨️</button>
+                        <a href="/allsales/pdf" class="btn btn-primary" title="Print">🖨️</a>
                     </div>
                 </div>
 
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle border-light-subtle" style="font-size: 13px;" id="printArea">
+                    <table class="table table-hover align-middle border-light-subtle" style="font-size: 13px;">
                         <thead class="table-light text-secondary fw-semibold border-bottom">
                             <tr>
                                 <th class="py-3">Invoice No</th>
@@ -420,44 +420,13 @@
             cursor: pointer;
         }
 
-        @media print {
-            /* ১. পুরো পেজের সব কিছু লুকিয়ে ফেলা */
-            body * {
-                visibility: hidden;
-            }
-            /* ২. শুধুমাত্র নির্দিষ্ট প্রিন্ট এরিয়া এবং তার ভেতরের কন্টেন্ট দেখানো */
-            #printArea, #printArea * {
-                visibility: visible;
-            }
-            /* ৩. প্রিন্ট এরিয়াকে পেজের একদম ওপর থেকে শুরু করা */
-            #printArea {
-                position: absolute;
-                margin-top: -100px
-                left: 0 !important;
-                top: 0 !important;
-                width: 100%;
-                border: none !important; /* বর্ডার সুন্দর না লাগলে বাদ দেওয়া */
-                padding: 0 !important;
-            }
-            /* ৪. প্রিন্ট পেজে ব্যাকগ্রাউন্ড কালার ও টেক্সট কালার ঠিক রাখা */
-            body {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            /* ৫. প্রিন্ট করার সময় বাটন গ্রুপ হাইড করা (যদি প্রিন্ট এরিয়ার ভেতরে থাকে) */
-            .btn-group, .no-print {
-                display: none !important;
-            }
-        }
     </style>
 @endpush
 
 
 @push('script')
     <script>
-        function printDiv() {
-            window.print();
-        }
+        
         
     </script>
 @endpush
