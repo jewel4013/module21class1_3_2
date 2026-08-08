@@ -124,6 +124,9 @@ Route::middleware(['jwtauth'])->group( function(){
 
         //pdf section
         Route::get('/allsales/pdf', [PdfController::class, 'allSales'])->name('allSales');
+        Route::get('/todaysales/pdf', [PdfController::class, 'todaySales'])->name('todaySales');
+        Route::get('/lastmonthsales/pdf', [PdfController::class, 'lastMonthSales'])->name('lastMonthSales');
+        Route::get('/lastyearsales/pdf', [PdfController::class, 'lastYearSales'])->name('lastYearSales');
     }); 
 });
     

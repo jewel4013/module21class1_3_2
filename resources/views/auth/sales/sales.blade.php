@@ -37,7 +37,7 @@
             <div class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" role="tab" aria-controls="profile" aria-selected="false">                
                 <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-4 border-info">
                     <span class="text-muted d-block small fw-bold text-uppercase">Today's Sale</span>
-                    <span class="fs-3 fw-bold text-info mt-1">৳{{ number_format($todaySales->sum('grand_total'), 2) }}</span>
+                    <span class="fs-3 fw-bold text-info mt-1">৳{{ number_format($todaySales->sum('paid_amount'), 2) }}</span>
                     <small class="text-secondary" style="font-size: 11px;">※ Real-time calculations</small>
                 </div>
             </div>          
@@ -46,7 +46,7 @@
             <div class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" role="tab" aria-controls="contact" aria-selected="false">                
                 <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-4 border-primary">
                     <span class="text-muted d-block small fw-bold text-uppercase">Last Month Sale</span>
-                    <span class="fs-3 fw-bold text-primary mt-1">৳{{ number_format($lastMonthSales->sum('grand_total'), 2) }}</span>
+                    <span class="fs-3 fw-bold text-primary mt-1">৳{{ number_format($lastMonthSales->sum('paid_amount'), 2) }}</span>
                     <small class="text-secondary" style="font-size: 11px;">※ Real-time calculations</small>
                 </div>
             </div>          
@@ -55,7 +55,7 @@
             <div class="nav-link" id="contact2-tab" data-bs-toggle="tab" data-bs-target="#contact2" role="tab" aria-controls="contact2" aria-selected="false">                
                 <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-4 border-warning">
                     <span class="text-muted d-block small fw-bold text-uppercase">Last Year's Sale</span>
-                    <span class="fs-3 fw-bold text-warning mt-1">৳{{ number_format($lastYearSales->sum('grand_total'), 2) }}</span>
+                    <span class="fs-3 fw-bold text-warning mt-1">৳{{ number_format($lastYearSales->sum('paid_amount'), 2) }}</span>
                     <small class="text-secondary" style="font-size: 11px;">※ Real-time calculations</small>
                 </div>
             </div>          
@@ -68,7 +68,7 @@
             <div class="card border-0 shadow-sm p-4 bg-white" style="border-radius:0 0 10px 10px;">
                 <div class="d-flex align-items-center justify-content-between mb-4">
                     <h5 class="fw-bold text-dark m-0">📜 Recent Sales History</h5>
-                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-2 px-2 py-1 smallfw-semibold">Total Orders: {{ count($sales) }}</span>
+                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-2 px-2 py-1 smallfw-semibold">Total Sales: {{ count($sales) }}</span>
                     <div class="btn-group btn-group-sm">
                         <button class="btn btn-danger" title="Copy">📋</button>
                         <button class="btn btn-secondary" title="CSV">📄</button>
@@ -157,8 +157,8 @@
         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             <div class="card border-0 shadow-sm p-4 bg-white" style="border-radius:0 0 10px 10px;">
                 <div class="d-flex align-items-center justify-content-between mb-4">
-                    <h5 class="fw-bold text-dark m-0">📜 Today Sel History</h5>
-                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-2 px-2 py-1 smallfw-semibold">Total Orders: {{ count($sales) }}</span>
+                    <h5 class="fw-bold text-dark m-0">📜 Today Sales History</h5>
+                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-2 px-2 py-1 smallfw-semibold">Total Sales: {{ count($todaySales) }}</span>
                     <div class="btn-group btn-group-sm">
                         <button class="btn btn-danger" title="Copy">📋</button>
                         <button class="btn btn-secondary" title="CSV">📄</button>
@@ -248,7 +248,7 @@
             <div class="card border-0 shadow-sm p-4 bg-white" style="border-radius:0 0 10px 10px;">
                 <div class="d-flex align-items-center justify-content-between mb-4">
                     <h5 class="fw-bold text-dark m-0">Last Month Sale</h5>
-                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-2 px-2 py-1 smallfw-semibold">Total Orders: {{ count($sales) }}</span>
+                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-2 px-2 py-1 smallfw-semibold">Total Sales: {{ count($lastMonthSales) }}</span>
                     <div class="btn-group btn-group-sm">
                         <button class="btn btn-danger" title="Copy">📋</button>
                         <button class="btn btn-secondary" title="CSV">📄</button>
@@ -338,7 +338,7 @@
             <div class="card border-0 shadow-sm p-4 bg-white" style="border-radius:0 0 10px 10px;">
                 <div class="d-flex align-items-center justify-content-between mb-4">
                     <h5 class="fw-bold text-dark m-0">Last Year Sale</h5>
-                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-2 px-2 py-1 smallfw-semibold">Total Orders: {{ count($sales) }}</span>
+                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-2 px-2 py-1 smallfw-semibold">Total Sales: {{ count($lastYearSales) }}</span>
                     <div class="btn-group btn-group-sm">
                         <button class="btn btn-danger" title="Copy">📋</button>
                         <button class="btn btn-secondary" title="CSV">📄</button>

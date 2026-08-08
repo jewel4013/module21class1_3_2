@@ -121,7 +121,7 @@
             <div class="report-title">Address: {{ Auth::user()->profile->address }}</div>
         </div>
         <div class="caption-container">
-            <div class="box-left">All Sales Report</div>
+            <div class="box-left">Last Year Sales Report</div>
             <div class="box-right">{{ now()->format('d-m-Y h:i A') }}</div>
             <div class="clear-fix"></div> <!-- ফ্লোট ব্রেক করার জন্য জরুরি -->
         </div>

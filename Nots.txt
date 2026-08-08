@@ -14,7 +14,7 @@ Installed Packeges:
 2. Toastr 
 3. Axios
 4. jQuery
-5. Pdf composer require barryvdh/laravel-dompdf
+5. Pdf composer require spatie/laravel-pdf
     (যদি আপনার config ফোল্ডারে dompdf.php ফাইলটি না থাকে, 
     তবে টার্মিনালে 
     php artisan vendor:publish --provider="Barryvdh\DomPDF\ServiceProvider" 
