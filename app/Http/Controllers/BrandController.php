@@ -21,9 +21,11 @@ class BrandController extends Controller
         $validated = $request->validated();
         try {            
             if ($request->hasFile('image')) {
-                $path = $request->file('image')->store('images', 'public');
-                $validated['image'] = $path;
-            } else {
+                $imageFile = $request->file('image');
+                $imageName = time() . '_main.' . $imageFile->getClientOriginalExtension();
+                $imageFile->move(storage_path('app/public/images/brands'), $imageName);
+                $validated['image'] = 'images/brands/' . $imageName;
+            } else{
                 $validated['image'] = null; // কোনো ছবি না দিলে ডিফল্ট নাল যাবে
             }
             $validated['slug'] = Str::slug($validated['name']);

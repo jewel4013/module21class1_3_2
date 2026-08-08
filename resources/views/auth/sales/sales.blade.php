@@ -45,7 +45,7 @@
         <li class="nav-item col-12 col-sm-6 col-md-3" role="presentation">
             <div class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" role="tab" aria-controls="contact" aria-selected="false">                
                 <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-4 border-primary">
-                    <span class="text-muted d-block small fw-bold text-uppercase">Month Sale</span>
+                    <span class="text-muted d-block small fw-bold text-uppercase">Last Month Sale</span>
                     <span class="fs-3 fw-bold text-primary mt-1">৳{{ number_format($lastMonthSales->sum('grand_total'), 2) }}</span>
                     <small class="text-secondary" style="font-size: 11px;">※ Real-time calculations</small>
                 </div>
@@ -54,7 +54,7 @@
         <li class="nav-item col-12 col-sm-6 col-md-3" role="presentation">
             <div class="nav-link" id="contact2-tab" data-bs-toggle="tab" data-bs-target="#contact2" role="tab" aria-controls="contact2" aria-selected="false">                
                 <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-4 border-warning">
-                    <span class="text-muted d-block small fw-bold text-uppercase">Year's Sale</span>
+                    <span class="text-muted d-block small fw-bold text-uppercase">Last Year's Sale</span>
                     <span class="fs-3 fw-bold text-warning mt-1">৳{{ number_format($lastYearSales->sum('grand_total'), 2) }}</span>
                     <small class="text-secondary" style="font-size: 11px;">※ Real-time calculations</small>
                 </div>
@@ -159,6 +159,13 @@
                 <div class="d-flex align-items-center justify-content-between mb-4">
                     <h5 class="fw-bold text-dark m-0">📜 Today Sel History</h5>
                     <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-2 px-2 py-1 smallfw-semibold">Total Orders: {{ count($sales) }}</span>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-danger" title="Copy">📋</button>
+                        <button class="btn btn-secondary" title="CSV">📄</button>
+                        <button class="btn btn-warning text-white" title="Excel">📊</button>
+                        <button class="btn btn-info text-white" title="PDF">📕</button>
+                        <a href="/todaysales/pdf" class="btn btn-primary" title="Print">🖨️</a>
+                    </div>
                 </div>
 
                 <div class="table-responsive">
@@ -240,8 +247,15 @@
         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <div class="card border-0 shadow-sm p-4 bg-white" style="border-radius:0 0 10px 10px;">
                 <div class="d-flex align-items-center justify-content-between mb-4">
-                    <h5 class="fw-bold text-dark m-0">📜 Month Sale</h5>
+                    <h5 class="fw-bold text-dark m-0">Last Month Sale</h5>
                     <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-2 px-2 py-1 smallfw-semibold">Total Orders: {{ count($sales) }}</span>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-danger" title="Copy">📋</button>
+                        <button class="btn btn-secondary" title="CSV">📄</button>
+                        <button class="btn btn-warning text-white" title="Excel">📊</button>
+                        <button class="btn btn-info text-white" title="PDF">📕</button>
+                        <a href="/lastmonthsales/pdf" class="btn btn-primary" title="Print">🖨️</a>
+                    </div>
                 </div>
 
                 <div class="table-responsive">
@@ -323,8 +337,15 @@
         <div class="tab-pane fade" id="contact2" role="tabpanel" aria-labelledby="contact2-tab">
             <div class="card border-0 shadow-sm p-4 bg-white" style="border-radius:0 0 10px 10px;">
                 <div class="d-flex align-items-center justify-content-between mb-4">
-                    <h5 class="fw-bold text-dark m-0">📜 Year Sale</h5>
+                    <h5 class="fw-bold text-dark m-0">Last Year Sale</h5>
                     <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-2 px-2 py-1 smallfw-semibold">Total Orders: {{ count($sales) }}</span>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-danger" title="Copy">📋</button>
+                        <button class="btn btn-secondary" title="CSV">📄</button>
+                        <button class="btn btn-warning text-white" title="Excel">📊</button>
+                        <button class="btn btn-info text-white" title="PDF">📕</button>
+                        <a href="/lastyearsales/pdf" class="btn btn-primary" title="Print">🖨️</a>
+                    </div>
                 </div>
 
                 <div class="table-responsive">

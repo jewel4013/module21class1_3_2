@@ -19,7 +19,7 @@
     <!-- 🚀 ১. ওপরের ডাইনামিক অ্যাকশন বাটন জোন (হুবহু ইমেজের মতো রঙিন) -->
     <div class="d-flex flex-wrap gap-2 mb-4">
         <a href="/products/create" class="btn btn-success rounded-2 fw-semibold px-3 btn-sm">➕ Add Product</a>
-        <button class="btn btn-purple text-white rounded-2 fw-semibold px-3 btn-sm" style="background-color: #6f42c1;">📥 Import Category</button>
+        <button class="btn btn-purple text-white rounded-2 fw-semibold px-3 btn-sm" style="background-color: #6f42c1;">📥 Import Product</button>
         <button class="btn btn-info text-white rounded-2 fw-semibold px-3 btn-sm">Active Home</button>
         <button class="btn btn-warning text-dark rounded-2 fw-semibold px-3 btn-sm">De-Active Home</button>
         <button class="btn btn-primary text-white rounded-2 fw-semibold px-3 btn-sm">Active Menu</button>

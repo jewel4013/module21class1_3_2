@@ -128,29 +128,6 @@
 @push('script')
     <script>
         
-        //getDashboardData();
-        async function getDashboardData() {
-            try {                
-                let response = await axios.get('/backend/profile');
-                console.log(response);
-
-                if(response.status === 200){
-                    let data = response.data.data;
-                    document.getElementById('userAvatar').src = data.avatar;
-                    document.getElementById('userName').innerHTML = data.name;
-
-                } else {
-                    console.log(response.data);                    
-                    toastr.error(response.data.message || "Failed to load dashboard data.");
-                }
-            } catch (error) {
-                console.error(error);
-                if (error.response && error.response.data) {
-                    toastr.error(error.response.data.message);
-                } else {
-                    toastr.error("Something went wrong while fetching dashboard data.");
-                }
-            }
-        }
+       
     </script>
 @endpush

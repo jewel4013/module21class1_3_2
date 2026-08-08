@@ -47,8 +47,10 @@ class AuthController extends Controller
             $user = User::create($userData);
             $profileData['user_id'] = $user->id;
             if ($request->hasFile('avatar')) {
-                $path = $request->file('avatar')->store('avatars', 'public');
-                $profileData['avatar'] = $path;
+                $avaterFile = $request->file('avatar');
+                $imageName = time() . '_main.' . $avaterFile->getClientOriginalExtension();
+                $avaterFile->move(storage_path('app/public/avaters'), $imageName);
+                $profileData['avatar'] = 'avaters/' . $imageName;
             } else {
                 $profileData['avatar'] = null; // কোনো ছবি না দিলে ডিফল্ট নাল যাবে
             }

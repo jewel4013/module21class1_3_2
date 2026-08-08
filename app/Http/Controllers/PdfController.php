@@ -3,28 +3,49 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sale;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
+ // ফাসাদ ইমপোর্ট করুন
 
 class PdfController extends Controller
 {
     public function allSales(){
-        $data = []; // আপনার ডাটা এখানে থাকবে
+        $sales = Sale::all();
+        $totalSalesAmount = $sales->sum('paid_amount');
 
-        // ১. ভিউ লোড করা
-        $pdf = Pdf::loadView('pdf.allSales', $data);
-
-        // ২. ফন্ট ডিরেক্টরি এবং ক্যাশ অপশন সেট করা (এটিই মূল সমাধান)
-        $pdf->setOption([
-            'fontDir' => public_path('fonts/'), // আপনার TTF ফন্ট যেখানে আছে
-            'fontCache' => storage_path('fonts/'), // ক্যাশ ফাইল যেখানে তৈরি হবে
-            'isRemoteEnabled' => true
-        ]);
-
-        // ৩. পেজ সাইজ নির্ধারণ
-        $pdf->setPaper('a4', 'portrait'); 
-
-        // ৪. ব্রাউজারে স্ট্রিম করা
-        return $pdf->stream('allSales.pdf');
+        // কনফিগ ফাইল থেকে ডাটা অটো লোড হবে
+        $pdf = PDF::loadView('pdf.allSales', compact('sales', 'totalSalesAmount'));
+        
+        return $pdf->stream('all-sales-report.pdf');
     }
+
+    public function todaySales(){
+        $sales = Sale::where('sale_date', '>=', now()->subDays(1))->get();
+        $totalSalesAmount = $sales->sum('paid_amount');
+
+        // কনফিগ ফাইল থেকে ডাটা অটো লোড হবে
+        $pdf = PDF::loadView('pdf.todaySales', compact('sales', 'totalSalesAmount'));
+        
+        return $pdf->stream('today-sales-report.pdf');
+    }
+
+    public function lastMonthSales(){
+        $sales = Sale::where('sale_date', '>=', now()->subMonths(1))->get();
+        $totalSalesAmount = $sales->sum('paid_amount');
+
+        // কনফিগ ফাইল থেকে ডাটা অটো লোড হবে
+        $pdf = PDF::loadView('pdf.lastMonthSales', compact('sales', 'totalSalesAmount'));
+        
+        return $pdf->stream('last-month-sales-report.pdf');
+    }
+
+    public function lastYearSales(){
+        $sales = Sale::where('sale_date', '>=', now()->subYears(1))->get();
+        $totalSalesAmount = $sales->sum('paid_amount');
+
+        // কনফিগ ফাইল থেকে ডাটা অটো লোড হবে
+        $pdf = PDF::loadView('pdf.lastYearSales', compact('sales', 'totalSalesAmount'));
+        
+        return $pdf->stream('last-year-sales-report.pdf');
+    }   
 }

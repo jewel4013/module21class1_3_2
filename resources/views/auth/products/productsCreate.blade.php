@@ -72,15 +72,15 @@
 
             <!-- ৭. Product Cost -->
             <div class="col-12 col-md-4">
-                <label class="form-label fw-semibold text-secondary">Product Cost *</label>
-                <input type="number" id="product_cost" class="form-control form-control-sm border-light-subtle rounded-2" value="0">
+                <label class="form-label fw-semibold text-secondary">Product Cost</label>
+                <input type="number" id="product_cost" class="form-control form-control-sm border-light-subtle rounded-2">
                 <div id="error-product_cost" class="invalid-feedback"></div>
             </div>
 
             <!-- ৮. Product Price -->
             <div class="col-12 col-md-4">
                 <label class="form-label fw-semibold text-secondary">Product Price *</label>
-                <input type="number" id="product_price" class="form-control form-control-sm border-light-subtle rounded-2" placeholder="Enter selling price">
+                <input type="number" id="product_price" class="form-control form-control-sm border-light-subtle rounded-2">
                 <div id="error-product_price" class="invalid-feedback"></div>
             </div>
 

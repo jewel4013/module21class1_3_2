@@ -34,19 +34,21 @@ class CatagoryController extends Controller
         $validated = $request->validated();
         try {            
             if ($request->hasFile('image')) {
-                $path = $request->file('image')->store('images', 'public');
-                $validated['image'] = $path;
+                $imageFile = $request->file('image');
+                $imageName = time() . '_main.' . $imageFile->getClientOriginalExtension();
+                $imageFile->move(storage_path('app/public/images/catagories'), $imageName);
+                $validated['image'] = 'images/catagories/' . $imageName;
             } else {
                 $validated['image'] = null; // কোনো ছবি না দিলে ডিফল্ট নাল যাবে
             }
             if ($request->hasFile('banner')) {
-                $path = $request->file('banner')->store('images', 'public');
-                $validated['banner'] = $path;
+                $bannerFile = $request->file('banner');
+                $bannerName = time() . '_main.' . $bannerFile->getClientOriginalExtension();
+                $bannerFile->move(storage_path('app/public/images/catagories/banners'), $bannerName);
+                $validated['banner'] = 'images/catagories/banners/' . $bannerName;
             } else {
                 $validated['banner'] = null; // কোনো ছবি না দিলে ডিফল্ট নাল যাবে
-            }   
-            
-            
+            } 
             Catagory::create($validated);
             return response()->json([
                 'status' => true,

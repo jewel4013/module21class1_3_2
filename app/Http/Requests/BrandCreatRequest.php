@@ -26,7 +26,7 @@ class BrandCreatRequest extends FormRequest
     {
         return [
             'name'     => 'required|string|max:255',
-            'description'    => 'nullable|string|max:5000',
+            'description'    => 'nullable|string|max:255',
             'image'   => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
             'is_popular'  => 'nullable|boolean',
             'show_home'  => 'nullable|boolean',

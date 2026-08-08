@@ -98,9 +98,15 @@
                             <span class="text-muted d-block">Product Code:</span>
                             <span class="fw-bold text-dark fs-6">{{ $product->product_code }}</span>
                         </div>
-                        <div class="col-6">
-                            <span class="text-muted d-block">Priority Rank:</span>
-                            <span class="fw-bold text-dark fs-6">#{{ $product->priority ?? 0 }}</span>
+                        <div class="col-6 d-flex align-items-center justify-content-between">
+                            <div class="col-6">
+                                <span class="text-muted d-block">Available Stocks:</span>
+                                <span class="fw-bold text-dark fs-6">#{{ $product->stock_quantity ?? 0 }}</span>
+                            </div>
+                            <div class="col-6">
+                                <span class="text-muted d-block">Priority Rank:</span>
+                                <span class="fw-bold text-dark fs-6">#{{ $product->priority ?? 0 }}</span>
+                            </div>                            
                         </div>
                         
                         <!-- ৩টি কন্ডিশনাল চেকবক্সের লাইভ স্ট্যাটাস ব্যাজ -->
